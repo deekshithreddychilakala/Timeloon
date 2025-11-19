@@ -1,0 +1,20 @@
+# Node
+node_modules/
+
+# Expo / React Native
+.expo/
+android/
+ios/
+web-build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+.vscode/
+coverage/
+
+# Env
+.env
+.env.*
