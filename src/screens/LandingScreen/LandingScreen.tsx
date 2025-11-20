@@ -14,16 +14,12 @@ import { LandingStyles as styles } from './LandingScreen.styles';
 const LandingScreen: React.FC = () => {
   return (
     <LinearGradient
-      // Approximate 27deg using start/end points
-      start={[0.0545, 0.2735]}
-      end={[0.9455, 0.7265]}
-      colors={[
-        'rgba(0,0,0,0.00)',
-        'rgba(0,0,0,0.00)',
-        'rgba(0,0,0,0.01)',
-        'rgba(0,0,0,0.01)'
-      ]}
-      locations={[0, 0.0024, 0.0024, 0.0048]}
+      // CSS: linear-gradient(195deg, #FB3 5.09%, #FFF 47.77%, #FFE792 90.45%);
+      // Approximate 195deg using start/end points derived from the angle
+      start={[0.983, 0.629]}
+      end={[0.017, 0.371]}
+      colors={["#FFBB33", "#FFFFFF", "#FFE792"]}
+      locations={[0.0509, 0.4777, 0.9045]}
       style={styles.container}
     >
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={false} />
