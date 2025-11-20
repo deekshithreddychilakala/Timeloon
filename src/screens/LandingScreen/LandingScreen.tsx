@@ -11,7 +11,8 @@ import { View, Text, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import colors from '@/styles/colors';
 import { LandingStyles as styles } from './LandingScreen.styles';
-import Logo from '../../../assets/timeloon_logo.svg';
+import Logo from '../../../assets/logo/timeloon_logo.svg';
+import PrimaryButton from '../../components/PrimaryButton';
 
 const LandingScreen: React.FC = () => {
   return (
@@ -23,16 +24,27 @@ const LandingScreen: React.FC = () => {
       locations={colors.landingScreenBG_Gradient.locations}
       style={styles.container}
     >
-      {/* <SafeAreaView> */}
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={false} />
+
+      <Text style={styles.small}>Welcome to</Text>
       <Text style={styles.title}>Timeloon</Text>
-      <Text style={styles.subtitle}>Track time beautifully</Text>
-      {/* LOGO PLACEHOLDER */}
-      <View style={styles.logoContainer}>
-        <Logo width={120} height={120} />
+
+      <View style={styles.illustrationWrap}>
+        <Logo width={220} height={220} />
       </View>
-      <Text style={styles.footer}>Made with code</Text>
-      {/* </SafeAreaView> */}
+
+      <Text style={styles.hero}>Glad you're here!</Text>
+      <Text style={styles.description}>
+        Timeloon lets you store memories and stories in the exact context they
+        belong: people.
+      </Text>
+
+      <PrimaryButton title="Get Started" onPress={() => { /* TODO */ }} />
+
+      <Text style={styles.terms}>
+        By continuing, you agree to <Text style={styles.link}>Terms of Service</Text> and{' '}
+        <Text style={styles.link}>Privacy Policy</Text>
+      </Text>
     </LinearGradient>
   );
 };
