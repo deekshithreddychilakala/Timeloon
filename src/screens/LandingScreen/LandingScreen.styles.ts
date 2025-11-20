@@ -6,8 +6,8 @@ export const LandingStyles = StyleSheet.create({
         flex: 1,
         flexShrink: 0,
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: 24,
+        // justifyContent: 'center',
+        // padding: 0,
         backgroundColor: colors.background,
     },
     logoContainer: {
@@ -18,6 +18,7 @@ export const LandingStyles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: colors.surface,
         marginBottom: 24,
+        marginTop: 24,
     },
     logoInnerPlaceholder: {
         width: 120,
@@ -36,6 +37,7 @@ export const LandingStyles = StyleSheet.create({
         fontSize: 28,
         fontWeight: '700',
         marginBottom: 8,
+        marginTop: '5%',
         color: colors.textPrimary,
     },
     subtitle: {

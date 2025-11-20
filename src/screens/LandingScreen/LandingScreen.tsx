@@ -11,35 +11,28 @@ import { View, Text, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import colors from '@/styles/colors';
 import { LandingStyles as styles } from './LandingScreen.styles';
+import Logo from '../../../assets/timeloon_logo.svg';
 
 const LandingScreen: React.FC = () => {
   return (
     <LinearGradient
       // Gradient comes from central color tokens
-      start={colors.gradient.start}
-      end={colors.gradient.end}
-      colors={colors.gradient.colors}
-      locations={colors.gradient.locations}
+      start={colors.landingScreenBG_Gradient.start}
+      end={colors.landingScreenBG_Gradient.end}
+      colors={colors.landingScreenBG_Gradient.colors}
+      locations={colors.landingScreenBG_Gradient.locations}
       style={styles.container}
     >
+      {/* <SafeAreaView> */}
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={false} />
-      <View style={styles.logoContainer}>
-        {/*
-         Placeholder logo area. Replace the contents below with a real image
-         asset when ready, for example:
-           <Image source={require('../../assets/logo.png')} />
-         Do NOT require non-image files (like .gitkeep) — Metro will fail to
-         resolve them.
-        */}
-        <View style={styles.logoInnerPlaceholder}>
-          <Text style={styles.logoText}>TL</Text>
-        </View>
-      </View>
-
       <Text style={styles.title}>Timeloon</Text>
       <Text style={styles.subtitle}>Track time beautifully</Text>
-
-      <Text style={styles.footer}>Made with ❤️</Text>
+      {/* LOGO PLACEHOLDER */}
+      <View style={styles.logoContainer}>
+        <Logo width={120} height={120} />
+      </View>
+      <Text style={styles.footer}>Made with code</Text>
+      {/* </SafeAreaView> */}
     </LinearGradient>
   );
 };
