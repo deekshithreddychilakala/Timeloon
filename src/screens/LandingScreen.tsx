@@ -7,19 +7,23 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
 
 const LandingScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <View style={styles.logoContainer}>
-        {/* Replace with your branded asset in `assets/` */}
-        <Image
-          source={require('../../assets/.gitkeep')}
-          style={styles.logoPlaceholder}
-          resizeMode="contain"
-        />
+        {/*
+         Placeholder logo area. Replace the contents below with a real image
+         asset when ready, for example:
+           <Image source={require('../../assets/logo.png')} />
+         Do NOT require non-image files (like .gitkeep) — Metro will fail to
+         resolve them.
+        */}
+        <View style={styles.logoInnerPlaceholder}>
+          <Text style={styles.logoText}>TL</Text>
+        </View>
       </View>
 
       <Text style={styles.title}>Timeloon</Text>
@@ -51,6 +55,19 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     opacity: 0.6,
+  },
+  logoInnerPlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 12,
+    backgroundColor: '#e6e6e6',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoText: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#999',
   },
   title: {
     fontSize: 28,
