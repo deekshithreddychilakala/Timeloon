@@ -9,17 +9,17 @@
 import React from 'react';
 import { View, Text, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import colors from '@/styles/colors';
 import { LandingStyles as styles } from './LandingScreen.styles';
 
 const LandingScreen: React.FC = () => {
   return (
     <LinearGradient
-      // CSS: linear-gradient(195deg, #FB3 5.09%, #FFF 47.77%, #FFE792 90.45%);
-      // Approximate 195deg using start/end points derived from the angle
-      start={[0.983, 0.629]}
-      end={[0.017, 0.371]}
-      colors={["#FFBB33", "#FFFFFF", "#FFE792"]}
-      locations={[0.0509, 0.4777, 0.9045]}
+      // Gradient comes from central color tokens
+      start={colors.gradient.start}
+      end={colors.gradient.end}
+      colors={colors.gradient.colors}
+      locations={colors.gradient.locations}
       style={styles.container}
     >
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={false} />
