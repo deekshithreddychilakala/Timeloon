@@ -1,0 +1,13 @@
+{
+    "expo": {
+        "ios": {
+            "supportsTablet": true,
+            "infoPlist": {
+                "UIStatusBarHidden": true
+            }
+        },
+        "android": {
+            "immersiveMode": true
+        }
+    }
+}

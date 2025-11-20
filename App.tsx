@@ -6,15 +6,15 @@
  * stores), and other global wrappers here.
  */
 
-import React from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import LandingScreen from './src/screens/LandingScreen/LandingScreen';
+import { GlobalStyles as styles } from '@/styles/Global.styles';
 
 export default function App() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <LandingScreen />
-    </SafeAreaView>
+    </View>
   );
 }

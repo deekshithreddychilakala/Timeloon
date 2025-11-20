@@ -23,12 +23,12 @@ export const colors = {
     textMuted: '#999999',
 
     // Gradient used on LandingScreen (matches Figma values)
-    gradient: {
+    landingScreenBG_Gradient: {
         // angle: 195deg approximately mapped to start/end points
-        start: [0.983, 0.629] as [number, number],
-        end: [0.017, 0.371] as [number, number],
+        start: { x: 1.35, y: 0.10 },
+        end: { x: -0.25, y: 0.90 },
         colors: ['#FFBB33', '#FFFFFF', '#FFE792'],
-        locations: [0.0509, 0.4777, 0.9045],
+        locations: [0.0509, 0.4777, 0.9045]
     },
 };
 

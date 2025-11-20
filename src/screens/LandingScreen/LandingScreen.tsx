@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { View, Text, StatusBar } from 'react-native';
+import { View, Text, StatusBar, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import colors from '@/styles/colors';
 import { LandingStyles as styles } from './LandingScreen.styles';
@@ -25,26 +25,27 @@ const LandingScreen: React.FC = () => {
       style={styles.container}
     >
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={false} />
+      <SafeAreaView style={styles.safeAreContainer}>
+        <Text style={styles.small}>Welcome to</Text>
+        <Text style={styles.title}>Timeloon</Text>
 
-      <Text style={styles.small}>Welcome to</Text>
-      <Text style={styles.title}>Timeloon</Text>
+        <View style={styles.illustrationWrap}>
+          <Logo width={220} height={220} />
+        </View>
 
-      <View style={styles.illustrationWrap}>
-        <Logo width={220} height={220} />
-      </View>
+        <Text style={styles.hero}>Glad you're here!</Text>
+        <Text style={styles.description}>
+          Timeloon lets you store memories and stories in the exact context they
+          belong: people.
+        </Text>
 
-      <Text style={styles.hero}>Glad you're here!</Text>
-      <Text style={styles.description}>
-        Timeloon lets you store memories and stories in the exact context they
-        belong: people.
-      </Text>
+        <PrimaryButton title="Get Started" onPress={() => { /* TODO */ }} />
 
-      <PrimaryButton title="Get Started" onPress={() => { /* TODO */ }} />
-
-      <Text style={styles.terms}>
-        By continuing, you agree to <Text style={styles.link}>Terms of Service</Text> and{' '}
-        <Text style={styles.link}>Privacy Policy</Text>
-      </Text>
+        <Text style={styles.terms}>
+          By continuing, you agree to <Text style={styles.link}>Terms of Service</Text> and{' '}
+          <Text style={styles.link}>Privacy Policy</Text>
+        </Text>
+      </SafeAreaView>
     </LinearGradient>
   );
 };
