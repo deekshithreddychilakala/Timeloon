@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
-import LandingScreen from './src/screens/LandingScreen';
+import LandingScreen from './src/screens/LandingScreen/LandingScreen';
 
 export default function App() {
   return (

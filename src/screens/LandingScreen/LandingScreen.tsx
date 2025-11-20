@@ -7,7 +7,8 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, StatusBar } from 'react-native';
+import { LandingStyles as styles } from './LandingScreen.styles';
 
 const LandingScreen: React.FC = () => {
   return (
@@ -33,58 +34,5 @@ const LandingScreen: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  logoContainer: {
-    width: 160,
-    height: 160,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f2f2f2',
-    marginBottom: 24,
-  },
-  logoPlaceholder: {
-    width: 120,
-    height: 120,
-    opacity: 0.6,
-  },
-  logoInnerPlaceholder: {
-    width: 120,
-    height: 120,
-    borderRadius: 12,
-    backgroundColor: '#e6e6e6',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoText: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#999',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 32,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 24,
-    fontSize: 12,
-    color: '#999',
-  },
-});
 
 export default LandingScreen;
