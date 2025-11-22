@@ -1,88 +1,83 @@
 import { StyleSheet } from 'react-native';
 import colors from '@/styles/colors';
+import { Fonts } from '@/utils/fonts';
 
 export const LandingStyles = StyleSheet.create({
     container: {
         flex: 1,
         flexShrink: 0,
-        alignItems: 'center',
         margin: 'auto',
         textAlign: 'center',
         backgroundColor: colors.background,
+        padding: 28,
+        flexDirection: 'column'
     },
     safeAreContainer: {
         flex: 1,
-        flexShrink: 1,
+        flexShrink: 0,
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    heroContainer: {
+        flex: 1,
+        flexShrink: 0,
         alignItems: 'center',
     },
-    logoInnerPlaceholder: {
-        width: 120,
-        height: 120,
-        borderRadius: 12,
-        backgroundColor: colors.muted,
-        alignItems: 'center',
-        justifyContent: 'center',
+    ctaButton: {
+        minWidth: '100%'
     },
-    logoText: {
-        fontSize: 28,
-        fontWeight: '700',
-        color: colors.textMuted,
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: '700',
-        marginBottom: 8,
-        marginTop: '5%',
-        color: colors.textPrimary,
-    },
-    small: {
+    welcomeText: {
         marginTop: 12,
-        fontSize: 14,
-        color: colors.textSecondary,
-        marginBottom: 6,
-    },
-    subtitle: {
-        fontSize: 16,
-        color: colors.textSecondary,
+        fontWeight: '500',
+        fontFamily: Fonts.light,
+        fontSize: 15,
+        color: colors.black2,
         marginBottom: 8,
+        letterSpacing: -0.15
+    },
+    appTitle: {
+        fontSize: 48,
+        fontFamily: Fonts.black,
+        fontWeight: '500',
+        marginBottom: 8,
+        color: colors.black3,
     },
     illustrationWrap: {
-        marginTop: 12,
-        marginBottom: 24,
+        marginTop: 50,
         alignItems: 'center',
         justifyContent: 'center',
     },
     hero: {
         fontSize: 26,
         fontWeight: '800',
-        color: colors.textPrimary,
-        marginTop: 8,
-        marginBottom: 8,
+        color: colors.black,
+        marginBottom: 20,
+        fontFamily: Fonts.black
     },
     description: {
-        fontSize: 15,
-        color: colors.textSecondary,
+        fontSize: 17,
+        color: colors.black4,
         textAlign: 'center',
-        paddingHorizontal: 28,
+        paddingHorizontal: 30,
         marginBottom: 20,
+        fontFamily: Fonts.light,
+        lineHeight: 25.5,
+        letterSpacing: -0.17
     },
     terms: {
         marginTop: 18,
-        fontSize: 12,
-        color: colors.textSecondary,
+        fontSize: 13,
+        color: colors.black3,
         textAlign: 'center',
+        alignSelf: 'center',
         paddingHorizontal: 20,
         marginBottom: 16,
+        fontFamily: Fonts.medium,
+        letterSpacing: -.13
     },
     link: {
         textDecorationLine: 'underline',
-        color: colors.textPrimary,
+        color: colors.black3,
         fontWeight: '600',
-    },
-    footer: {
-        position: 'absolute',
-        bottom: 24,
-        fontSize: 12,
-        color: colors.textMuted,
-    },
+    }
 });

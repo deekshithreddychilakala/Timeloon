@@ -17,10 +17,11 @@ export const colors = {
     surface: '#F2F2F2',
     muted: '#E6E6E6',
 
-    // Text
-    textPrimary: '#000000',
-    textSecondary: '#666666',
-    textMuted: '#999999',
+    // colors
+    black: '#000000',
+    black2: 'rgba(28, 28, 30, 0.70)',
+    black3: '#1C1C1E',
+    black4: 'rgba(28, 28, 30, 0.75)',
 
     // Gradient used on LandingScreen (matches Figma values)
     landingScreenBG_Gradient: {

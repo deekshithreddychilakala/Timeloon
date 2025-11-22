@@ -1,5 +1,6 @@
 {
     "expo": {
+        "orientation": "portrait",
         "ios": {
             "supportsTablet": true,
             "infoPlist": {
@@ -8,6 +9,9 @@
         },
         "android": {
             "immersiveMode": true
-        }
+        },
+        "assets": [
+            "./assets/fonts/"
+        ]
     }
 }

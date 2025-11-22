@@ -26,23 +26,27 @@ const LandingScreen: React.FC = () => {
     >
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={false} />
       <SafeAreaView style={styles.safeAreContainer}>
-        <Text style={styles.small}>Welcome to</Text>
-        <Text style={styles.title}>Timeloon</Text>
+        <View style={styles.heroContainer}>
+          <Text style={styles.welcomeText}>Welcome to</Text>
+          <Text style={styles.appTitle}>Timeloon</Text>
 
-        <View style={styles.illustrationWrap}>
-          <Logo width={220} height={220} />
+          <View style={styles.illustrationWrap}>
+            <Logo />
+          </View>
+
+          <Text style={styles.hero}>Glad you're here!</Text>
+          <Text style={styles.description}>
+            Timeloon lets you store memories and stories in the exact context they
+            belong: people.
+          </Text>
+
+          <PrimaryButton style={styles.ctaButton} title="Get Started" onPress={() => { /* TODO */ }} />
         </View>
 
-        <Text style={styles.hero}>Glad you're here!</Text>
-        <Text style={styles.description}>
-          Timeloon lets you store memories and stories in the exact context they
-          belong: people.
-        </Text>
-
-        <PrimaryButton title="Get Started" onPress={() => { /* TODO */ }} />
-
         <Text style={styles.terms}>
-          By continuing, you agree to <Text style={styles.link}>Terms of Service</Text> and{' '}
+          By continuing, you agree to
+          {"\n"}
+          <Text style={styles.link}>Terms of Service</Text> and{' '}
           <Text style={styles.link}>Privacy Policy</Text>
         </Text>
       </SafeAreaView>

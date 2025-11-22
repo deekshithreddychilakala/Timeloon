@@ -1,5 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Fonts } from '@/utils/fonts';
 
 type Props = {
     title: string;
@@ -23,6 +25,20 @@ const PrimaryButton: React.FC<Props> = ({ title, onPress, style, textStyle, disa
             accessibilityState={{ disabled: !!disabled }}
             disabled={disabled}
         >
+            {/*
+                Figma gradient: linear-gradient(180deg, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0.00) 50%), #252525
+                We approximate by using a LinearGradient overlay and a dark base color.
+            */}
+            <LinearGradient
+                colors={[
+                    'rgba(255,255,255,0.3)',
+                    'rgba(255,255,255,0.0)',
+                ]}
+                locations={[0, 0.5]}
+                start={{ x: 0.5, y: 0 }}
+                end={{ x: 0.5, y: 1 }}
+                style={[StyleSheet.absoluteFillObject, styles.gradientElement]}
+            />
             <Text style={[styles.text, textStyle]}>{title}</Text>
         </TouchableOpacity>
     );
@@ -30,7 +46,7 @@ const PrimaryButton: React.FC<Props> = ({ title, onPress, style, textStyle, disa
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#222',
+        backgroundColor: '#252525',
         paddingVertical: 14,
         paddingHorizontal: 28,
         borderRadius: 12,
@@ -43,10 +59,15 @@ const styles = StyleSheet.create({
         elevation: 6,
         minWidth: 200,
     },
+    gradientElement: {
+        borderRadius: 12
+    },
     text: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 17,
         fontWeight: '600',
+        fontFamily: Fonts.medium,
+        letterSpacing: -0.17
     },
     disabled: {
         opacity: 0.6,
