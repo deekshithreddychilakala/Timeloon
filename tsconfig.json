@@ -13,6 +13,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "types": [
+      "node"
+    ],
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
@@ -33,6 +36,9 @@
       ],
       "@/styles/*": [
         "src/styles/*"
+      ],
+      "@/components/*": [
+        "src/components/*"
       ]
     }
   },
@@ -42,5 +48,5 @@
     "metro.config.js",
     "jest.config.js"
   ],
-  "extends": "expo/tsconfig.base"
+  "extends": "expo-module-scripts/tsconfig.base"
 }

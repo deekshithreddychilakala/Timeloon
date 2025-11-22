@@ -12,9 +12,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import colors from '@/styles/colors';
 import { LandingStyles as styles } from './LandingScreen.styles';
 import Logo from '../../../assets/logo/timeloon_logo.svg';
-import PrimaryButton from '../../components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
 
-const LandingScreen: React.FC = () => {
+type Props = {
+  onGetStarted?: () => void;
+};
+
+const LandingScreen: React.FC<Props> = ({ onGetStarted }) => {
+  const handleGetStarted = () => {
+    if (onGetStarted) return onGetStarted();
+    // No navigation container provided — caller should pass `onGetStarted`
+    // when using a navigation-based app. Fall back to a no-op and warn.
+    // This keeps the component safe to use in non-navigation entrypoints.
+    // eslint-disable-next-line no-console
+    console.warn('No navigation available: pass onGetStarted prop to LandingScreen');
+  };
   return (
     <LinearGradient
       // Gradient comes from central color tokens
@@ -40,7 +52,7 @@ const LandingScreen: React.FC = () => {
             belong: people.
           </Text>
 
-          <PrimaryButton style={styles.ctaButton} title="Get Started" onPress={() => { /* TODO */ }} />
+          <PrimaryButton style={styles.ctaButton} title="Get Started" onPress={handleGetStarted} />
         </View>
 
         <Text style={styles.terms}>
