@@ -13,18 +13,19 @@ import colors from '@/styles/colors';
 import { LandingStyles as styles } from './LandingScreen.styles';
 import Logo from '../../../assets/logo/timeloon_logo.svg';
 import PrimaryButton from '@/components/PrimaryButton';
-import { useNavigation } from '@react-navigation/native';
 
 type Props = {
   onGetStarted?: () => void;
 };
 
 const LandingScreen: React.FC<Props> = ({ onGetStarted }) => {
-  const navigation = useNavigation<any>();
-
   const handleGetStarted = () => {
     if (onGetStarted) return onGetStarted();
-    navigation.navigate('SignIn');
+    // No navigation container provided — caller should pass `onGetStarted`
+    // when using a navigation-based app. Fall back to a no-op and warn.
+    // This keeps the component safe to use in non-navigation entrypoints.
+    // eslint-disable-next-line no-console
+    console.warn('No navigation available: pass onGetStarted prop to LandingScreen');
   };
   return (
     <LinearGradient
