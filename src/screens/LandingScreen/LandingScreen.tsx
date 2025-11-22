@@ -12,9 +12,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import colors from '@/styles/colors';
 import { LandingStyles as styles } from './LandingScreen.styles';
 import Logo from '../../../assets/logo/timeloon_logo.svg';
-import PrimaryButton from '../../components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
+import { useNavigation } from '@react-navigation/native';
 
-const LandingScreen: React.FC = () => {
+type Props = {
+  onGetStarted?: () => void;
+};
+
+const LandingScreen: React.FC<Props> = ({ onGetStarted }) => {
+  const navigation = useNavigation<any>();
+
+  const handleGetStarted = () => {
+    if (onGetStarted) return onGetStarted();
+    navigation.navigate('SignIn');
+  };
   return (
     <LinearGradient
       // Gradient comes from central color tokens
@@ -40,7 +51,7 @@ const LandingScreen: React.FC = () => {
             belong: people.
           </Text>
 
-          <PrimaryButton style={styles.ctaButton} title="Get Started" onPress={() => { /* TODO */ }} />
+          <PrimaryButton style={styles.ctaButton} title="Get Started" onPress={handleGetStarted} />
         </View>
 
         <Text style={styles.terms}>
