@@ -23,6 +23,11 @@ export const colors = {
     black03: '#1C1C1E',
     black04: 'rgba(28, 28, 30, 0.75)',
     black05: 'rgba(28, 28, 30, 0.85)',
+    black06: 'rgba(28, 28, 30, 0.40)',
+    black07: 'rgba(28, 28, 30, 0.50)',
+    textUnderlineColor: 'rgba(42, 42, 44, 0.15)',
+
+    yellow01: '#FFDFA6',
 
     // Gradient used on LandingScreen (matches Figma values)
     landingScreenBG_Gradient: {
