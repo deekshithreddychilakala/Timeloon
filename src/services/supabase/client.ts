@@ -64,4 +64,19 @@ export async function signIn(email: string, password: string) {
     return response; // { data, error }
 }
 
+/**
+ * Sign up helper
+ * Creates a new user with email/password and optional user metadata
+ * Returns the full Supabase response so callers can inspect `data` and `error`.
+ */
+export async function signUp(email: string, password: string, metadata?: Record<string, any>) {
+    // Supabase JS client typings vary between versions. Use an any-cast to
+    // call signUp with metadata safely across versions.
+    // The metadata will be stored as user_metadata on the Supabase user.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const authAny: any = supabase.auth;
+    const response = await authAny.signUp({ email, password }, { data: metadata });
+    return response; // { data, error }
+}
+
 // You can expand this file with signUp, signOut, password reset helpers, etc.

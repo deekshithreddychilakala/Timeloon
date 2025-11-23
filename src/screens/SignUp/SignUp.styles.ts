@@ -4,39 +4,7 @@ import colors from '@/styles/colors';
 export const SignUpStyles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    gradientBg: {
-        flex: 1,
-        alignItems: 'center',
-        paddingHorizontal: 18,
-    },
-    logoElement: {
-        width: 420,
-        height: 420,
-        marginTop: -220,
-        opacity: 0.95,
-        alignSelf: 'center',
-    },
-    safeArea: {
-        flex: 1,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingVertical: 24,
-    },
-    title: {
-        fontSize: 36,
-        fontWeight: '700',
-        alignSelf: 'center',
-        marginTop: -120,
-        color: colors.black03,
-    },
-    description: {
-        fontSize: 16,
-        color: colors.black02,
-        alignSelf: 'center',
-        marginTop: 6,
-        marginBottom: 18,
+        overflow: 'hidden'
     },
     label: {
         fontSize: 16,
