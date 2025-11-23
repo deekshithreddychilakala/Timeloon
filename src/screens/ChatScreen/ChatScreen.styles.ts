@@ -16,7 +16,7 @@ export const ChatStyles = StyleSheet.create({
     },
     subtitle: {
         fontSize: 14,
-        color: colors.black4,
+        color: colors.black04,
         marginBottom: 24,
     },
     signOut: {
@@ -26,7 +26,7 @@ export const ChatStyles = StyleSheet.create({
         borderRadius: 8,
     },
     signOutText: {
-        color: colors.black3,
+        color: colors.black03,
         fontWeight: '600',
     },
 });

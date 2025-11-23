@@ -1,46 +1,60 @@
 import { StyleSheet } from 'react-native';
 import colors from '@/styles/colors';
+import { Fonts } from '@/utils/fonts';
 
 export const SignInStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.black3,
+        // backgroundColor: colors.secondary,
+        overflow: 'hidden',
+        // position: 'relative'
+    },
+    gradientBg: {
+        flex: 1,
+        height: '100%',
+        padding: 26
     },
     safeArea: {
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
-    content: {
-        padding: 20,
+    logoElement: {
+        position: 'absolute'
     },
     title: {
-        color: colors.secondary,
-        fontSize: 20,
-        fontWeight: '600',
-        marginBottom: 18,
+        color: colors.black,
+        fontFamily: Fonts.heavy,
+        fontSize: 32,
+        letterSpacing: -.64,
+        fontWeight: '800',
+        marginBottom: 8,
+        textAlign: 'center'
+    },
+    description: {
+        color: colors.black03,
+        fontFamily: Fonts.book,
+        fontSize: 16,
+        letterSpacing: -.16,
+        fontWeight: '500',
+        marginBottom: 98,
+        textAlign: 'center'
     },
     card: {
-        backgroundColor: colors.secondary,
-        borderRadius: 8,
-        padding: 18,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.12,
-        shadowRadius: 12,
-        elevation: 4,
     },
     label: {
-        color: colors.black3,
+        color: colors.black03,
         fontSize: 12,
         marginBottom: 6,
     },
     input: {
-        backgroundColor: '#FFF',
+        backgroundColor: colors.secondary,
         borderRadius: 8,
         borderWidth: 1,
         borderColor: '#F4C78A',
         paddingVertical: 12,
         paddingHorizontal: 14,
-        color: colors.black3,
+        color: colors.black03,
     },
     signInButton: {
         marginTop: 18,
@@ -50,7 +64,7 @@ export const SignInStyles = StyleSheet.create({
         marginTop: 12,
     },
     forgot: {
-        color: colors.black4,
+        color: colors.black04,
         textDecorationLine: 'underline',
     },
     footerRow: {
@@ -59,14 +73,14 @@ export const SignInStyles = StyleSheet.create({
         marginTop: 14,
     },
     small: {
-        color: colors.black4,
+        color: colors.black04,
     },
     link: {
-        color: colors.black3,
+        color: colors.black03,
         fontWeight: '700',
     },
     notice: {
-        color: colors.black4,
+        color: colors.black04,
         textAlign: 'center',
         marginTop: 28,
     },

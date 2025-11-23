@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LandingScreen from './src/screens/LandingScreen/LandingScreen';
 import SignIn from './src/screens/SignIn/SignIn';
+import SignUp from './src/screens/SignUp/SignUp';
 import ChatScreen from './src/screens/ChatScreen/ChatScreen';
 import { GlobalStyles as styles } from '@/styles/Global.styles';
 import { useFonts } from 'expo-font';
@@ -64,6 +65,7 @@ export default function App() {
                 )}
               </Stack.Screen>
               <Stack.Screen name="SignIn" component={SignIn} />
+              <Stack.Screen name="SignUp" component={SignUp} />
             </>
           )}
         </Stack.Navigator>
