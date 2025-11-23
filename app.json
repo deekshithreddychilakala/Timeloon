@@ -2,9 +2,10 @@
     "expo": {
         "orientation": "portrait",
         "ios": {
-            "supportsTablet": true,
+            "supportsTablet": false,
             "infoPlist": {
-                "UIStatusBarHidden": true
+                "UIStatusBarHidden": true,
+                "UIViewControllerBasedStatusBarAppearance": false
             }
         },
         "android": {

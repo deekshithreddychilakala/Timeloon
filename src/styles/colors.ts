@@ -19,9 +19,10 @@ export const colors = {
 
     // colors
     black: '#000000',
-    black2: 'rgba(28, 28, 30, 0.70)',
-    black3: '#1C1C1E',
-    black4: 'rgba(28, 28, 30, 0.75)',
+    black02: 'rgba(28, 28, 30, 0.70)',
+    black03: '#1C1C1E',
+    black04: 'rgba(28, 28, 30, 0.75)',
+    black05: 'rgba(28, 28, 30, 0.85)',
 
     // Gradient used on LandingScreen (matches Figma values)
     landingScreenBG_Gradient: {

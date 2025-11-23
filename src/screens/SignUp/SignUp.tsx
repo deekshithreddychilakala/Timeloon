@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import {
     View,
     Text,
@@ -10,33 +9,29 @@ import {
     Platform,
     StatusBar,
 } from 'react-native';
-import { SignInStyles as styles } from './SignIn.styles';
+import { SignUpStyles as styles } from './SignUp.styles';
 import colors from '@/styles/colors';
 import PrimaryButton from '@/components/PrimaryButton';
-import { signIn } from '@/services/supabase/client';
 import { LinearGradient } from 'expo-linear-gradient';
 import CircleLogo from '../../../assets/logo/Circle_shape.svg';
+import { useNavigation } from '@react-navigation/native';
 
-const SignIn: React.FC = () => {
-    const navigation = useNavigation<any>();
+const SignUp: React.FC = () => {
+    const navigation = useNavigation();
+
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [dob, setDob] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSignIn = async () => {
-        try {
-            console.log('Attempting sign in:', { email });
-            const response = await signIn(email, password);
-            // Log the full response for debugging as requested
-            console.log('Supabase signIn response:', response);
+    const handleCreateAccount = () => {
+        // placeholder: form submission / validation will go here
+        console.log('Create account pressed', { name, email, dob });
+    };
 
-            if (response.error) {
-                console.warn('Sign in error:', response.error);
-            } else {
-                console.log('Sign in success data:', response.data);
-            }
-        } catch (err) {
-            console.error('Unexpected sign in error', err);
-        }
+    const handleBackToSignIn = () => {
+        // Use goBack so we don't create another instance of SignIn on the stack
+        navigation.goBack();
     };
 
     return (
@@ -45,11 +40,12 @@ const SignIn: React.FC = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <LinearGradient
-                colors={['#FAFAFA', '#FAFAFA']}
+                colors={[colors.background, colors.background]}
                 start={{ x: 0.5, y: 1 }}
                 end={{ x: 0.5, y: 0 }}
-                style={styles.gradientBg}>
-                <CircleLogo style={styles.logoElement}></CircleLogo>
+                style={styles.gradientBg}
+            >
+                <CircleLogo style={styles.logoElement} />
 
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView style={styles.safeArea}>
@@ -57,7 +53,16 @@ const SignIn: React.FC = () => {
                         <Text style={styles.title}>Timeloon</Text>
                         <Text style={styles.description}>Create Your Timeline Identity</Text>
 
-                        <Text style={styles.label}>Email</Text>
+                        <Text style={styles.label}>Full Name</Text>
+                        <TextInput
+                            value={name}
+                            onChangeText={setName}
+                            placeholder="Your full name"
+                            placeholderTextColor={colors.muted}
+                            style={styles.input}
+                        />
+
+                        <Text style={[styles.label, { marginTop: 16 }]}>Email</Text>
                         <TextInput
                             value={email}
                             onChangeText={setEmail}
@@ -68,30 +73,34 @@ const SignIn: React.FC = () => {
                             style={styles.input}
                         />
 
-                        <Text style={[styles.label, { marginTop: 18 }]}>Password</Text>
+                        <Text style={[styles.label, { marginTop: 16 }]}>Date of Birth</Text>
                         <TextInput
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                            placeholder="Enter your password"
+                            value={dob}
+                            onChangeText={setDob}
+                            placeholder="dd/mm/yyyy"
                             placeholderTextColor={colors.muted}
                             style={styles.input}
                         />
 
-                        <PrimaryButton title="Sign in" onPress={handleSignIn} style={styles.signInButton} />
+                        <Text style={[styles.label, { marginTop: 16 }]}>Password</Text>
+                        <TextInput
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            placeholder="Create password"
+                            placeholderTextColor={colors.muted}
+                            style={styles.input}
+                        />
 
-                        <TouchableOpacity style={styles.forgotWrap}>
-                            <Text style={styles.forgot}>Forgot Password?</Text>
-                        </TouchableOpacity>
+                        <PrimaryButton title="Create Account" onPress={handleCreateAccount} style={styles.createButton} />
 
                         <View style={styles.footerRow}>
-                            <Text style={styles.small}>New to Timeloon? </Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                                <Text style={styles.link}>Create Account</Text>
+                            <Text style={styles.small}>Already have an account? </Text>
+                            <TouchableOpacity onPress={handleBackToSignIn}>
+                                <Text style={styles.link}>Sign In</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-
 
                     <Text style={styles.notice}>Your data never leaves your control.</Text>
                 </SafeAreaView>
@@ -100,4 +109,4 @@ const SignIn: React.FC = () => {
     );
 };
 
-export default SignIn;
+export default SignUp;

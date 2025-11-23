@@ -31,7 +31,7 @@ export const LandingStyles = StyleSheet.create({
         fontWeight: '500',
         fontFamily: Fonts.light,
         fontSize: 15,
-        color: colors.black2,
+        color: colors.black02,
         marginBottom: 8,
         letterSpacing: -0.15
     },
@@ -40,7 +40,7 @@ export const LandingStyles = StyleSheet.create({
         fontFamily: Fonts.black,
         fontWeight: '500',
         marginBottom: 8,
-        color: colors.black3,
+        color: colors.black03,
     },
     illustrationWrap: {
         marginTop: 50,
@@ -56,7 +56,7 @@ export const LandingStyles = StyleSheet.create({
     },
     description: {
         fontSize: 17,
-        color: colors.black4,
+        color: colors.black04,
         textAlign: 'center',
         paddingHorizontal: 30,
         marginBottom: 20,
@@ -67,7 +67,7 @@ export const LandingStyles = StyleSheet.create({
     terms: {
         marginTop: 18,
         fontSize: 13,
-        color: colors.black3,
+        color: colors.black03,
         textAlign: 'center',
         alignSelf: 'center',
         paddingHorizontal: 20,
@@ -77,7 +77,7 @@ export const LandingStyles = StyleSheet.create({
     },
     link: {
         textDecorationLine: 'underline',
-        color: colors.black3,
+        color: colors.black03,
         fontWeight: '600',
     }
 });
