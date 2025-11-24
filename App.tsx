@@ -2,11 +2,13 @@ import 'react-native-url-polyfill/auto';
 import 'react-native-gesture-handler';
 import { useState, useEffect } from 'react';
 import { StatusBar, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LandingScreen from './src/screens/LandingScreen/LandingScreen';
 import SignIn from './src/screens/SignIn/SignIn';
 import SignUp from './src/screens/SignUp/SignUp';
+import ResetPassword from './src/screens/ResetPassword/ResetPassword';
 import ChatScreen from './src/screens/ChatScreen/ChatScreen';
 import { GlobalStyles as styles } from '@/styles/Global.styles';
 import { useFonts } from 'expo-font';
@@ -65,11 +67,13 @@ export default function App() {
                 )}
               </Stack.Screen>
               <Stack.Screen name="SignIn" component={SignIn} />
+              <Stack.Screen name="ResetPassword" component={ResetPassword} />
               <Stack.Screen name="SignUp" component={SignUp} />
             </>
           )}
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast />
     </View>
   );
 }

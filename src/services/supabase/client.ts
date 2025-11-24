@@ -64,4 +64,40 @@ export async function signIn(email: string, password: string) {
     return response; // { data, error }
 }
 
+/**
+ * Sign up helper
+ * Creates a new user with email/password and optional user metadata
+ * Returns the full Supabase response so callers can inspect `data` and `error`.
+ */
+export async function signUp(email: string, password: string, metadata?: Record<string, any>) {
+    // Supabase JS client typings vary between versions. Use an any-cast to
+    // call signUp with metadata safely across versions.
+    // The metadata will be stored as user_metadata on the Supabase user.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const authAny: any = supabase.auth;
+    const response = await authAny.signUp({ email, password }, { data: metadata });
+    return response; // { data, error }
+}
+
+/**
+ * Send password reset email to the provided address.
+ * Returns the supabase response object.
+ */
+export async function sendPasswordReset(email: string) {
+    // Use any-cast to support variations across supabase client versions
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const authAny: any = supabase.auth;
+    // Many versions expose `resetPasswordForEmail` which sends the reset link.
+    if (typeof authAny.resetPasswordForEmail === 'function') {
+        return await authAny.resetPasswordForEmail(email);
+    }
+    // Fallback to api method if present
+    if (authAny.api && typeof authAny.api.resetPasswordForEmail === 'function') {
+        return await authAny.api.resetPasswordForEmail(email);
+    }
+
+    // If neither is available, throw an informative error
+    throw new Error('Supabase client does not support resetPasswordForEmail on this SDK version.');
+}
+
 // You can expand this file with signUp, signOut, password reset helpers, etc.

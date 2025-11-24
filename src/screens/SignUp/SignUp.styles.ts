@@ -1,59 +1,33 @@
 import { StyleSheet } from 'react-native';
 import colors from '@/styles/colors';
+import { Fonts } from '@/utils/fonts';
 
 export const SignUpStyles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    gradientBg: {
-        flex: 1,
-        alignItems: 'center',
-        paddingHorizontal: 18,
-    },
-    logoElement: {
-        width: 420,
-        height: 420,
-        marginTop: -220,
-        opacity: 0.95,
-        alignSelf: 'center',
-    },
-    safeArea: {
-        flex: 1,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingVertical: 24,
-    },
-    title: {
-        fontSize: 36,
-        fontWeight: '700',
-        alignSelf: 'center',
-        marginTop: -120,
-        color: colors.black03,
-    },
-    description: {
-        fontSize: 16,
-        color: colors.black02,
-        alignSelf: 'center',
-        marginTop: 6,
-        marginBottom: 18,
+        overflow: 'hidden'
     },
     label: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: colors.black03,
-        marginTop: 12,
+        color: colors.black05,
+        fontSize: 14,
+        fontFamily: Fonts.heavy,
+        letterSpacing: -.14,
+        marginBottom: 10,
+        fontWeight: '800'
     },
     input: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: colors.secondary,
+        minHeight: 48,
         borderRadius: 12,
-        paddingHorizontal: 18,
-        paddingVertical: 14,
         borderWidth: 1,
-        borderColor: colors.tertiary,
-        marginTop: 8,
+        borderColor: colors.yellow01,
+        paddingVertical: 14.75,
+        paddingHorizontal: 21.5,
+        color: colors.black06,
+        fontFamily: Fonts.medium,
         fontSize: 16,
-        width: '100%'
+        letterSpacing: -.16,
+        marginBottom: 20
     },
     createButton: {
         marginTop: 20,
@@ -80,6 +54,30 @@ export const SignUpStyles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 18,
         paddingBottom: 8,
+    }
+    ,
+    // modal picker container for iOS
+    pickerOverlay: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.45)',
+        justifyContent: 'flex-end',
+        alignItems: 'stretch',
+        padding: 0,
+        margin: 0
+    },
+    pickerContainer: {
+        alignSelf: 'stretch',
+        width: '100%',
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        paddingTop: 8,
+        paddingBottom: 32,
+        paddingHorizontal: 12,
     }
 });
 

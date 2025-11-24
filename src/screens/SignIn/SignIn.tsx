@@ -11,7 +11,7 @@ import {
     StatusBar,
 } from 'react-native';
 import { SignInStyles as styles } from './SignIn.styles';
-import colors from '@/styles/colors';
+import colors, { commonScreenStyles } from '@/styles/colors';
 import PrimaryButton from '@/components/PrimaryButton';
 import { signIn } from '@/services/supabase/client';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -24,15 +24,20 @@ const SignIn: React.FC = () => {
 
     const handleSignIn = async () => {
         try {
-            console.log('Attempting sign in:', { email });
-            const response = await signIn(email, password);
-            // Log the full response for debugging as requested
-            console.log('Supabase signIn response:', response);
+            if (email && password) {
+                console.log('Attempting sign in:', { email });
+                const response = await signIn(email, password);
+                // Log the full response for debugging as requested
+                console.log('Supabase signIn response:', response);
 
-            if (response.error) {
-                console.warn('Sign in error:', response.error);
+                if (response.error) {
+                    console.error('Sign in error:', response.error);
+                } else {
+                    console.log('Sign in success data:', response.data);
+                }
             } else {
-                console.log('Sign in success data:', response.data);
+                // Error message for empty fields
+                console.error('Error, empty fields');
             }
         } catch (err) {
             console.error('Unexpected sign in error', err);
@@ -45,17 +50,17 @@ const SignIn: React.FC = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <LinearGradient
-                colors={['#FAFAFA', '#FAFAFA']}
-                start={{ x: 0.5, y: 1 }}
-                end={{ x: 0.5, y: 0 }}
-                style={styles.gradientBg}>
-                <CircleLogo style={styles.logoElement}></CircleLogo>
+                colors={colors.commonScreensBGConfig.colors}
+                start={colors.commonScreensBGConfig.start}
+                end={colors.commonScreensBGConfig.end}
+                style={colors.commonScreensBGElement}>
+                <CircleLogo style={commonScreenStyles.logoElement}></CircleLogo>
 
                 <StatusBar barStyle="dark-content" />
-                <SafeAreaView style={styles.safeArea}>
+                <SafeAreaView style={commonScreenStyles.safeArea}>
                     <View style={{ flex: 1, width: '100%' }}>
-                        <Text style={styles.title}>Timeloon</Text>
-                        <Text style={styles.description}>Create Your Timeline Identity</Text>
+                        <Text style={commonScreenStyles.title}>Timeloon</Text>
+                        <Text style={commonScreenStyles.description}>Create Your Timeline Identity</Text>
 
                         <Text style={styles.label}>Email</Text>
                         <TextInput
@@ -64,30 +69,34 @@ const SignIn: React.FC = () => {
                             keyboardType="email-address"
                             autoCapitalize="none"
                             placeholder="your@email.com"
-                            placeholderTextColor={colors.muted}
+                            placeholderTextColor={colors.black06}
                             style={styles.input}
                         />
 
-                        <Text style={[styles.label, { marginTop: 18 }]}>Password</Text>
+                        <Text style={[styles.label]}>Password</Text>
                         <TextInput
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry
                             placeholder="Enter your password"
-                            placeholderTextColor={colors.muted}
-                            style={styles.input}
+                            placeholderTextColor={colors.black06}
+                            style={[styles.input, styles.passwordInput]}
                         />
 
-                        <PrimaryButton title="Sign in" onPress={handleSignIn} style={styles.signInButton} />
+                        <PrimaryButton title="Sign in" onPress={handleSignIn} />
 
-                        <TouchableOpacity style={styles.forgotWrap}>
-                            <Text style={styles.forgot}>Forgot Password?</Text>
+                        <TouchableOpacity style={styles.forgotWrap} onPress={() => navigation.navigate('ResetPassword')}>
+                            <View style={styles.linkContainer}>
+                                <Text style={styles.forgot}>Forgot Password?</Text>
+                            </View>
                         </TouchableOpacity>
 
                         <View style={styles.footerRow}>
                             <Text style={styles.small}>New to Timeloon? </Text>
                             <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                                <Text style={styles.link}>Create Account</Text>
+                                <View style={styles.createAccLinkContainer}>
+                                    <Text style={styles.link}>Create Account</Text>
+                                </View>
                             </TouchableOpacity>
                         </View>
                     </View>
