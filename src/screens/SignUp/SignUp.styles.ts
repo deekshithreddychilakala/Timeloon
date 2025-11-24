@@ -34,6 +34,9 @@ export const SignUpStyles = StyleSheet.create({
         alignSelf: 'center',
         minWidth: '100%'
     },
+    dobInput: {
+        borderRadius: 20
+    },
     footerRow: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -41,21 +44,19 @@ export const SignUpStyles = StyleSheet.create({
         marginTop: 16,
     },
     small: {
-        color: colors.black02,
-        fontSize: 14,
-    },
-    link: {
-        color: colors.black03,
-        fontWeight: '700',
-        marginLeft: 6,
+        color: colors.black04,
+        fontSize: 15,
+        letterSpacing: -.15,
+        fontFamily: Fonts.medium
     },
     notice: {
-        color: colors.muted,
-        alignSelf: 'center',
-        marginTop: 18,
-        paddingBottom: 8,
-    }
-    ,
+        color: colors.black07,
+        textAlign: 'center',
+        fontSize: 13,
+        fontFamily: Fonts.book,
+        lineHeight: 18.2,
+        letterSpacing: -.13
+    },
     // modal picker container for iOS
     pickerOverlay: {
         position: 'absolute',
@@ -78,6 +79,18 @@ export const SignUpStyles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 32,
         paddingHorizontal: 12,
+    },
+    signInLinkContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: colors.yellow01,
+        paddingBottom: 3,
+    },
+    link: {
+        color: colors.black,
+        fontWeight: '700',
+        fontSize: 15,
+        letterSpacing: -.15,
+        fontFamily: Fonts.heavy
     }
 });
 
