@@ -11,7 +11,7 @@ import {
     StatusBar,
 } from 'react-native';
 import { SignInStyles as styles } from './SignIn.styles';
-import colors from '@/styles/colors';
+import colors, { commonScreenStyles } from '@/styles/colors';
 import PrimaryButton from '@/components/PrimaryButton';
 import { signIn } from '@/services/supabase/client';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -50,17 +50,17 @@ const SignIn: React.FC = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <LinearGradient
-                colors={['#FAFAFA', '#FAFAFA']}
-                start={{ x: 0.5, y: 1 }}
-                end={{ x: 0.5, y: 0 }}
-                style={styles.gradientBg}>
-                <CircleLogo style={styles.logoElement}></CircleLogo>
+                colors={colors.commonScreensBGConfig.colors}
+                start={colors.commonScreensBGConfig.start}
+                end={colors.commonScreensBGConfig.end}
+                style={colors.commonScreensBGElement}>
+                <CircleLogo style={commonScreenStyles.logoElement}></CircleLogo>
 
                 <StatusBar barStyle="dark-content" />
-                <SafeAreaView style={styles.safeArea}>
+                <SafeAreaView style={commonScreenStyles.safeArea}>
                     <View style={{ flex: 1, width: '100%' }}>
-                        <Text style={styles.title}>Timeloon</Text>
-                        <Text style={styles.description}>Create Your Timeline Identity</Text>
+                        <Text style={commonScreenStyles.title}>Timeloon</Text>
+                        <Text style={commonScreenStyles.description}>Create Your Timeline Identity</Text>
 
                         <Text style={styles.label}>Email</Text>
                         <TextInput
@@ -85,7 +85,7 @@ const SignIn: React.FC = () => {
 
                         <PrimaryButton title="Sign in" onPress={handleSignIn} />
 
-                        <TouchableOpacity style={styles.forgotWrap}>
+                        <TouchableOpacity style={styles.forgotWrap} onPress={() => navigation.navigate('ResetPassword')}>
                             <View style={styles.linkContainer}>
                                 <Text style={styles.forgot}>Forgot Password?</Text>
                             </View>

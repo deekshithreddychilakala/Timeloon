@@ -9,37 +9,6 @@ export const SignInStyles = StyleSheet.create({
         overflow: 'hidden',
         // position: 'relative'
     },
-    gradientBg: {
-        flex: 1,
-        height: '100%',
-        padding: 26
-    },
-    safeArea: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    logoElement: {
-        position: 'absolute'
-    },
-    title: {
-        color: colors.black,
-        fontFamily: Fonts.heavy,
-        fontSize: 32,
-        letterSpacing: -.64,
-        fontWeight: '800',
-        marginBottom: 8,
-        textAlign: 'center'
-    },
-    description: {
-        color: colors.black03,
-        fontFamily: Fonts.book,
-        fontSize: 16,
-        letterSpacing: -.16,
-        fontWeight: '500',
-        marginBottom: 98,
-        textAlign: 'center'
-    },
     label: {
         color: colors.black05,
         fontSize: 14,
