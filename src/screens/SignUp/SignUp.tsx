@@ -58,8 +58,15 @@ const SignUp: React.FC = () => {
             if (resp.error) {
                 console.warn('Sign up error:', resp.error);
             } else {
-                // Successful signup — return user to SignIn to continue
-                navigation.replace('SignIn');
+                // If Supabase returned a session the auth listener in App.tsx
+                // will update `isAuthenticated` and navigate to the authenticated
+                // stack (Chat). If there's no session (e.g. email confirmation
+                // required), navigate back to SignIn. This avoids calling
+                // replace when SignIn is not present in the active navigator.
+                const hasSession = !!(resp?.data?.session ?? resp?.data?.user);
+                if (!hasSession) {
+                    navigation.replace('SignIn');
+                }
             }
         } catch (err) {
             console.error('Unexpected sign up error', err);
