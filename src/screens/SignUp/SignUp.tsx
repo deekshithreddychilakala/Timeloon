@@ -17,7 +17,7 @@ import CircleLogo from '../../../assets/logo/Circle_shape.svg';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { signUp } from '@/services/supabase/client';
-import { Modal, TouchableWithoutFeedback } from 'react-native';
+import { Modal, TouchableWithoutFeedback, Alert } from 'react-native';
 
 const SignUp: React.FC = () => {
     const navigation = useNavigation<any>();
@@ -57,16 +57,30 @@ const SignUp: React.FC = () => {
             console.log('signUp response', resp);
             if (resp.error) {
                 console.warn('Sign up error:', resp.error);
+                Alert.alert('Sign up failed', resp.error.message || 'Unable to create account');
             } else {
-                // If Supabase returned a session the auth listener in App.tsx
-                // will update `isAuthenticated` and navigate to the authenticated
-                // stack (Chat). If there's no session (e.g. email confirmation
-                // required), navigate back to SignIn. This avoids calling
-                // replace when SignIn is not present in the active navigator.
-                const hasSession = !!(resp?.data?.session ?? resp?.data?.user);
-                if (!hasSession) {
-                    navigation.replace('SignIn');
-                }
+                // Notify the user
+                Alert.alert('Sign up successful', 'Your account was created.', [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            // If a session was returned, Supabase likely signed-in the user
+                            // and the auth listener in App.tsx will switch to the
+                            // authenticated navigator. If that hasn't happened yet
+                            // but the current navigator already knows about `Chat`,
+                            // reset to it explicitly.
+                            const hasSession = !!(resp?.data?.session ?? resp?.data?.user);
+                            const state = navigation.getState?.();
+                            const routeNames: string[] = state?.routeNames ?? [];
+                            if (hasSession && routeNames.includes('Chat')) {
+                                navigation.reset({ index: 0, routes: [{ name: 'Chat' }] });
+                            } else if (!hasSession) {
+                                // No session -> go to SignIn so the user can verify / login
+                                navigation.replace('SignIn');
+                            }
+                        },
+                    },
+                ]);
             }
         } catch (err) {
             console.error('Unexpected sign up error', err);
