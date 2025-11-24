@@ -17,7 +17,8 @@ import CircleLogo from '../../../assets/logo/Circle_shape.svg';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { signUp } from '@/services/supabase/client';
-import { Modal, TouchableWithoutFeedback } from 'react-native';
+import { Modal, TouchableWithoutFeedback, View as RNView } from 'react-native';
+import CalendarIcon from '../../../assets/icons/calendar.svg';
 import Toast from 'react-native-toast-message';
 
 const SignUp: React.FC = () => {
@@ -132,16 +133,25 @@ const SignUp: React.FC = () => {
                         />
 
                         <Text style={[styles.label]}>Date of Birth</Text>
-                        <TouchableOpacity onPress={() => { setTempDate(selectedDate ?? new Date(1990, 0, 1)); setShowDatePicker(true); }}>
-                            <TextInput
-                                pointerEvents="none"
-                                editable={false}
-                                value={dob}
-                                placeholder="dd/mm/yyyy"
-                                placeholderTextColor={colors.muted}
-                                style={styles.input}
-                            />
-                        </TouchableOpacity>
+                        <RNView style={{ position: 'relative', width: '100%' }}>
+                            <TouchableOpacity onPress={() => { setTempDate(selectedDate ?? new Date(1990, 0, 1)); setShowDatePicker(true); }} activeOpacity={0.9}>
+                                <TextInput
+                                    pointerEvents="none"
+                                    editable={false}
+                                    value={dob}
+                                    placeholder="dd/mm/yyyy"
+                                    placeholderTextColor={colors.muted}
+                                    style={styles.input}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => { setTempDate(selectedDate ?? new Date(1990, 0, 1)); setShowDatePicker(true); }}
+                                style={{ position: 'absolute', right: 12, top: 12, height: 28, width: 28, justifyContent: 'center', alignItems: 'center' }}
+                                accessibilityRole="button"
+                            >
+                                <CalendarIcon width={20} height={20} />
+                            </TouchableOpacity>
+                        </RNView>
                         {/* Date picker handling: Android shows native dialog when rendered; iOS should render in a bottom modal overlay */}
                         {showDatePicker && Platform.OS === 'android' && (
                             <DateTimePicker
