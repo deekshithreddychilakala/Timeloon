@@ -1,21 +1,79 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { ChatStyles as styles } from './ChatScreen.styles';
-import { supabase } from '@/services/supabase/client';
+import BottomTabNav from '@/components/BottomTabNav';
 
-const ChatScreen: React.FC = () => {
-    const handleSignOut = async () => {
-        await supabase.auth.signOut();
+interface ChatScreenProps {
+    onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
+}
+
+const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
+    const [messageText, setMessageText] = React.useState('');
+
+    const suggestionPrompts = [
+        "Tell me about your childhood",
+        "What was your first job?",
+        "Share a favorite family memory"
+    ];
+
+    const handleSendMessage = () => {
+        if (messageText.trim()) {
+            // TODO: Implement message sending logic
+            console.log('Sending message:', messageText);
+            setMessageText('');
+        }
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Chat</Text>
-            <Text style={styles.subtitle}>Welcome to Timeloon chat — you're signed in.</Text>
+            <View style={styles.header}>
+                <Text style={styles.title}>Timeloon AI</Text>
+                <Text style={styles.subtitle}>Ask anything. Reflect. Capture memories.</Text>
+            </View>
 
-            <TouchableOpacity style={styles.signOut} onPress={handleSignOut}>
-                <Text style={styles.signOutText}>Sign out</Text>
-            </TouchableOpacity>
+            <ScrollView
+                style={{ flex: 1 }}
+                contentContainerStyle={styles.scrollContent}
+            >
+                <View style={styles.content}>
+                    <Text style={styles.centerText}>
+                        Start a conversation to capture your memories
+                    </Text>
+
+                    <View style={styles.promptsContainer}>
+                        {suggestionPrompts.map((prompt, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={styles.promptButton}
+                                onPress={() => setMessageText(prompt)}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={styles.promptText}>{prompt}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </View>
+            </ScrollView>
+
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Type your message..."
+                    placeholderTextColor="#999"
+                    value={messageText}
+                    onChangeText={setMessageText}
+                    multiline
+                />
+                <TouchableOpacity
+                    style={styles.sendButton}
+                    onPress={handleSendMessage}
+                    activeOpacity={0.7}
+                >
+                    <Text style={styles.sendButtonText}>Send</Text>
+                </TouchableOpacity>
+            </View>
+
+            <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
         </View>
     );
 };
