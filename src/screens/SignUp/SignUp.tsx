@@ -17,7 +17,8 @@ import CircleLogo from '../../../assets/logo/Circle_shape.svg';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { signUp } from '@/services/supabase/client';
-import { Modal, TouchableWithoutFeedback, Alert } from 'react-native';
+import { Modal, TouchableWithoutFeedback } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 const SignUp: React.FC = () => {
     const navigation = useNavigation<any>();
@@ -27,6 +28,7 @@ const SignUp: React.FC = () => {
     const [dob, setDob] = useState('');
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const [tempDate, setTempDate] = useState<Date | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState('');
 
@@ -38,10 +40,16 @@ const SignUp: React.FC = () => {
     };
 
     const handleDateChange = (event: any, date?: Date | undefined) => {
-        setShowDatePicker(false);
-        if (date) {
-            setSelectedDate(date);
-            setDob(formatDate(date));
+        if (Platform.OS === 'android') {
+            // Android: dialog-style picker selects and closes directly
+            setShowDatePicker(false);
+            if (date) {
+                setSelectedDate(date);
+                setDob(formatDate(date));
+            }
+        } else {
+            // iOS: update temporary date only; user confirms with Done
+            if (date) setTempDate(date);
         }
     };
 
@@ -57,30 +65,21 @@ const SignUp: React.FC = () => {
             console.log('signUp response', resp);
             if (resp.error) {
                 console.warn('Sign up error:', resp.error);
-                Alert.alert('Sign up failed', resp.error.message || 'Unable to create account');
+                Toast.show({ type: 'error', text1: 'Sign up failed', text2: resp.error.message || 'Unable to create account' });
             } else {
-                // Notify the user
-                Alert.alert('Sign up successful', 'Your account was created.', [
-                    {
-                        text: 'OK',
-                        onPress: () => {
-                            // If a session was returned, Supabase likely signed-in the user
-                            // and the auth listener in App.tsx will switch to the
-                            // authenticated navigator. If that hasn't happened yet
-                            // but the current navigator already knows about `Chat`,
-                            // reset to it explicitly.
-                            const hasSession = !!(resp?.data?.session ?? resp?.data?.user);
-                            const state = navigation.getState?.();
-                            const routeNames: string[] = state?.routeNames ?? [];
-                            if (hasSession && routeNames.includes('Chat')) {
-                                navigation.reset({ index: 0, routes: [{ name: 'Chat' }] });
-                            } else if (!hasSession) {
-                                // No session -> go to SignIn so the user can verify / login
-                                navigation.replace('SignIn');
-                            }
-                        },
-                    },
-                ]);
+                // Show a non-blocking toast for success, then navigate appropriately
+                Toast.show({ type: 'success', text1: 'Sign up successful', text2: 'Your account was created.' });
+                const hasSession = !!(resp?.data?.session ?? resp?.data?.user);
+                // Give the toast a moment to be visible before navigation
+                setTimeout(() => {
+                    const state = navigation.getState?.();
+                    const routeNames: string[] = state?.routeNames ?? [];
+                    if (hasSession && routeNames.includes('Chat')) {
+                        navigation.reset({ index: 0, routes: [{ name: 'Chat' }] });
+                    } else if (!hasSession) {
+                        navigation.replace('SignIn');
+                    }
+                }, 600);
             }
         } catch (err) {
             console.error('Unexpected sign up error', err);
@@ -121,7 +120,7 @@ const SignUp: React.FC = () => {
                             style={styles.input}
                         />
 
-                        <Text style={[styles.label, { marginTop: 16 }]}>Email</Text>
+                        <Text style={[styles.label]}>Email</Text>
                         <TextInput
                             value={email}
                             onChangeText={setEmail}
@@ -132,8 +131,8 @@ const SignUp: React.FC = () => {
                             style={styles.input}
                         />
 
-                        <Text style={[styles.label, { marginTop: 16 }]}>Date of Birth</Text>
-                        <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                        <Text style={[styles.label]}>Date of Birth</Text>
+                        <TouchableOpacity onPress={() => { setTempDate(selectedDate ?? new Date(1990, 0, 1)); setShowDatePicker(true); }}>
                             <TextInput
                                 pointerEvents="none"
                                 editable={false}
@@ -160,10 +159,23 @@ const SignUp: React.FC = () => {
                                     <View style={styles.pickerOverlay}>
                                         <TouchableWithoutFeedback>
                                             <View style={styles.pickerContainer}>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 8, marginBottom: 8 }}>
+                                                    <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                                                        <Text style={{ color: '#007AFF', fontSize: 16 }}>Cancel</Text>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => {
+                                                        const apply = tempDate ?? selectedDate ?? new Date(1990, 0, 1);
+                                                        setSelectedDate(apply);
+                                                        setDob(formatDate(apply));
+                                                        setShowDatePicker(false);
+                                                    }}>
+                                                        <Text style={{ color: '#007AFF', fontSize: 16, fontWeight: '600' }}>Done</Text>
+                                                    </TouchableOpacity>
+                                                </View>
                                                 <DateTimePicker
-                                                    value={selectedDate ?? new Date(1990, 0, 1)}
+                                                    value={tempDate ?? selectedDate ?? new Date(1990, 0, 1)}
                                                     mode="date"
-                                                    display="spinner"
+                                                    display="calendar"
                                                     maximumDate={new Date()}
                                                     onChange={handleDateChange}
                                                     style={{ width: '100%' }}
@@ -175,7 +187,7 @@ const SignUp: React.FC = () => {
                             </Modal>
                         )}
 
-                        <Text style={[styles.label, { marginTop: 16 }]}>Password</Text>
+                        <Text style={[styles.label]}>Password</Text>
                         <TextInput
                             value={password}
                             onChangeText={setPassword}

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import colors from '@/styles/colors';
+import { Fonts } from '@/utils/fonts';
 
 export const SignUpStyles = StyleSheet.create({
     container: {
@@ -7,21 +8,26 @@ export const SignUpStyles = StyleSheet.create({
         overflow: 'hidden'
     },
     label: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: colors.black03,
-        marginTop: 12,
+        color: colors.black05,
+        fontSize: 14,
+        fontFamily: Fonts.heavy,
+        letterSpacing: -.14,
+        marginBottom: 10,
+        fontWeight: '800'
     },
     input: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: colors.secondary,
+        minHeight: 48,
         borderRadius: 12,
-        paddingHorizontal: 18,
-        paddingVertical: 14,
         borderWidth: 1,
-        borderColor: colors.tertiary,
-        marginTop: 8,
+        borderColor: colors.yellow01,
+        paddingVertical: 14.75,
+        paddingHorizontal: 21.5,
+        color: colors.black06,
+        fontFamily: Fonts.medium,
         fontSize: 16,
-        width: '100%'
+        letterSpacing: -.16,
+        marginBottom: 20
     },
     createButton: {
         marginTop: 20,
@@ -52,16 +58,19 @@ export const SignUpStyles = StyleSheet.create({
     ,
     // modal picker container for iOS
     pickerOverlay: {
-        position: 'absolute',
+        // position: 'absolute',
         left: 0,
         right: 0,
         top: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.4)',
+        backgroundColor: 'rgba(0,0,0,0.45)',
         justifyContent: 'flex-end',
-        alignItems: 'center'
+        alignItems: 'stretch',
+        padding: 0,
+        margin: 0
     },
     pickerContainer: {
+        alignSelf: 'stretch',
         width: '100%',
         backgroundColor: '#fff',
         borderTopLeftRadius: 16,
