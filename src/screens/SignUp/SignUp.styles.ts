@@ -49,6 +49,27 @@ export const SignUpStyles = StyleSheet.create({
         marginTop: 18,
         paddingBottom: 8,
     }
+    ,
+    // modal picker container for iOS
+    pickerOverlay: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
+    pickerContainer: {
+        width: '100%',
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        paddingTop: 8,
+        paddingBottom: 32,
+        paddingHorizontal: 12,
+    }
 });
 
 export default SignUpStyles;

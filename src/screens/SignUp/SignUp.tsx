@@ -17,6 +17,7 @@ import CircleLogo from '../../../assets/logo/Circle_shape.svg';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { signUp } from '@/services/supabase/client';
+import { Modal, TouchableWithoutFeedback } from 'react-native';
 
 const SignUp: React.FC = () => {
     const navigation = useNavigation<any>();
@@ -121,14 +122,36 @@ const SignUp: React.FC = () => {
                                 style={styles.input}
                             />
                         </TouchableOpacity>
-                        {showDatePicker && (
+                        {/* Date picker handling: Android shows native dialog when rendered; iOS should render in a bottom modal overlay */}
+                        {showDatePicker && Platform.OS === 'android' && (
                             <DateTimePicker
                                 value={selectedDate ?? new Date(1990, 0, 1)}
                                 mode="date"
-                                display={Platform.OS === 'ios' ? 'spinner' : 'calendar'}
+                                display="calendar"
                                 maximumDate={new Date()}
                                 onChange={handleDateChange}
                             />
+                        )}
+
+                        {showDatePicker && Platform.OS === 'ios' && (
+                            <Modal transparent animationType="slide" visible onRequestClose={() => setShowDatePicker(false)}>
+                                <TouchableWithoutFeedback onPress={() => setShowDatePicker(false)}>
+                                    <View style={styles.pickerOverlay}>
+                                        <TouchableWithoutFeedback>
+                                            <View style={styles.pickerContainer}>
+                                                <DateTimePicker
+                                                    value={selectedDate ?? new Date(1990, 0, 1)}
+                                                    mode="date"
+                                                    display="spinner"
+                                                    maximumDate={new Date()}
+                                                    onChange={handleDateChange}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </View>
+                                        </TouchableWithoutFeedback>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </Modal>
                         )}
 
                         <Text style={[styles.label, { marginTop: 16 }]}>Password</Text>
