@@ -154,7 +154,7 @@ const SignUp: React.FC = () => {
                         )}
 
                         {showDatePicker && Platform.OS === 'ios' && (
-                            <Modal transparent animationType="slide" visible onRequestClose={() => setShowDatePicker(false)}>
+                            <Modal transparent animationType="slide" presentationStyle="overFullScreen" visible onRequestClose={() => setShowDatePicker(false)}>
                                 <TouchableWithoutFeedback onPress={() => setShowDatePicker(false)}>
                                     <View style={styles.pickerOverlay}>
                                         <TouchableWithoutFeedback>
@@ -175,7 +175,7 @@ const SignUp: React.FC = () => {
                                                 <DateTimePicker
                                                     value={tempDate ?? selectedDate ?? new Date(1990, 0, 1)}
                                                     mode="date"
-                                                    display="calendar"
+                                                    display="spinner"
                                                     maximumDate={new Date()}
                                                     onChange={handleDateChange}
                                                     style={{ width: '100%' }}

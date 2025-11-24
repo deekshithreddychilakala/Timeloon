@@ -58,7 +58,7 @@ export const SignUpStyles = StyleSheet.create({
     ,
     // modal picker container for iOS
     pickerOverlay: {
-        // position: 'absolute',
+        position: 'absolute',
         left: 0,
         right: 0,
         top: 0,
