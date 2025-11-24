@@ -117,7 +117,7 @@ const SignUp: React.FC = () => {
                             value={name}
                             onChangeText={setName}
                             placeholder="Your full name"
-                            placeholderTextColor={colors.muted}
+                            placeholderTextColor={colors.black06}
                             style={styles.input}
                         />
 
@@ -128,7 +128,7 @@ const SignUp: React.FC = () => {
                             keyboardType="email-address"
                             autoCapitalize="none"
                             placeholder="your@email.com"
-                            placeholderTextColor={colors.muted}
+                            placeholderTextColor={colors.black06}
                             style={styles.input}
                         />
 
@@ -140,8 +140,8 @@ const SignUp: React.FC = () => {
                                     editable={false}
                                     value={dob}
                                     placeholder="dd/mm/yyyy"
-                                    placeholderTextColor={colors.muted}
-                                    style={styles.input}
+                                    placeholderTextColor={colors.black06}
+                                    style={[styles.input, styles.dobInput]}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity
@@ -203,7 +203,7 @@ const SignUp: React.FC = () => {
                             onChangeText={setPassword}
                             secureTextEntry
                             placeholder="Create password"
-                            placeholderTextColor={colors.muted}
+                            placeholderTextColor={colors.black06}
                             style={styles.input}
                         />
 
@@ -212,7 +212,9 @@ const SignUp: React.FC = () => {
                         <View style={styles.footerRow}>
                             <Text style={styles.small}>Already have an account? </Text>
                             <TouchableOpacity onPress={handleBackToSignIn}>
-                                <Text style={styles.link}>Sign In</Text>
+                                <View style={styles.signInLinkContainer}>
+                                    <Text style={styles.link}>Sign In</Text>
+                                </View>
                             </TouchableOpacity>
                         </View>
                     </View>

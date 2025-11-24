@@ -64,7 +64,7 @@ const ResetPassword: React.FC = () => {
                 <SafeAreaView style={commonScreenStyles.safeArea}>
                     <View style={{ flex: 1, width: '100%' }}>
                         <Text style={commonScreenStyles.title}>Timeloon</Text>
-                        <Text style={commonScreenStyles.description}>Create Your Timeline Identity</Text>
+                        <Text style={[commonScreenStyles.description, styles.descMargin]}>Create Your Timeline Identity</Text>
 
                         {!sent ? (
                             <>
@@ -75,7 +75,7 @@ const ResetPassword: React.FC = () => {
                                     keyboardType="email-address"
                                     autoCapitalize="none"
                                     placeholder="your@email.com"
-                                    placeholderTextColor={colors.muted}
+                                    placeholderTextColor={colors.black06}
                                     style={styles.input}
                                 />
 
@@ -90,7 +90,9 @@ const ResetPassword: React.FC = () => {
                         <View style={styles.footerRow}>
                             <Text style={styles.small}>New to Timeloon? </Text>
                             <TouchableOpacity onPress={() => navigation.replace('SignUp')}>
-                                <Text style={styles.link}>Create Account</Text>
+                                <View style={styles.createAccLinkContainer}>
+                                    <Text style={styles.link}>Create Account</Text>
+                                </View>
                             </TouchableOpacity>
                         </View>
 
