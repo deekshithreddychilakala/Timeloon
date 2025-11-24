@@ -32,6 +32,7 @@ export const colors = {
     textUnderlineColor: 'rgba(42, 42, 44, 0.15)',
 
     yellow01: '#FFDFA6',
+    activeTabIcon: '#E5AB47',
 
     // Gradient used on LandingScreen (matches Figma values)
     landingScreenBG_Gradient: {

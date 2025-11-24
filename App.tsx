@@ -46,6 +46,9 @@ export default function App() {
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session?.access_token);
+      if (session?.access_token) {
+        setActiveTab('Chat'); // Reset to Chat screen on sign in
+      }
     });
 
     return () => {
