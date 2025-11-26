@@ -7,9 +7,11 @@ export const ChatStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.background,
     },
+    scrollView: {
+        flex: 1,
+    },
     scrollContent: {
-        flexGrow: 1,
-        paddingBottom: 140, // space for input + bottom tab
+        flexGrow: 1
     },
     header: {
         paddingTop: 60,
@@ -65,41 +67,33 @@ export const ChatStyles = StyleSheet.create({
         textAlign: 'center',
     },
     inputContainer: {
-        position: 'absolute',
-        bottom: 80, // above bottom tab
-        left: 0,
-        right: 0,
         paddingHorizontal: 27.3,
         paddingVertical: 12,
         backgroundColor: 'rgba(255,255,255,0.95)',
         borderTopWidth: 1,
         borderTopColor: colors.tertiary,
-        flexDirection: 'row',
-        alignItems: 'flex-end',
+        marginBottom: 80, // space for bottom tab
     },
     input: {
         flex: 1,
         minHeight: 40,
         maxHeight: 100,
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderColor: colors.tertiary,
-        borderRadius: 20,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        backgroundColor: 'transparent',
         fontFamily: Fonts.book,
         fontSize: 14,
         letterSpacing: -0.14,
         color: colors.black,
-        marginRight: 8,
     },
     sendButton: {
-        paddingVertical: 10,
-        paddingHorizontal: 20,
+        width: 48,
+        height: 48,
         backgroundColor: colors.primary,
-        borderRadius: 20,
+        borderRadius: 24,
         justifyContent: 'center',
         alignItems: 'center',
+        marginLeft: 8,
     },
     sendButtonDisabled: {
         opacity: 0.5,
@@ -186,14 +180,20 @@ export const ChatStyles = StyleSheet.create({
     },
     inputRow: {
         flexDirection: 'row',
-        alignItems: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: colors.background,
+        borderWidth: 1.5,
+        borderColor: '#E5AB47',
+        borderRadius: 28,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
     },
     imageButton: {
         width: 40,
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 8,
+        marginRight: 4,
     },
     imageButtonText: {
         fontSize: 24,

@@ -6,6 +6,8 @@ import { supabase } from '@/services/supabase/client';
 import Toast from 'react-native-toast-message';
 import * as ImagePicker from 'expo-image-picker';
 import TypingIndicator from '@/components/TypingIndicator';
+import PlusIcon from '@/components/icons/PlusIcon';
+import ArrowRightIcon from '@/components/icons/ArrowRightIcon';
 
 interface Message {
     id: string;
@@ -430,7 +432,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
             <ScrollView
                 ref={scrollViewRef}
-                style={{ flex: 1 }}
+                style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
                 onContentSizeChange={() => {
                     scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -490,15 +492,15 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         disabled={isLoading || isUploading}
                     >
                         {isUploading ? (
-                            <ActivityIndicator size="small" color="#666" />
+                            <ActivityIndicator size="small" color="#E5AB47" />
                         ) : (
-                            <Text style={styles.imageButtonText}>📷</Text>
+                            <PlusIcon />
                         )}
                     </TouchableOpacity>
                     <TextInput
                         style={styles.input}
-                        placeholder="Type your message..."
-                        placeholderTextColor="#999"
+                        placeholder="How can I help you today?"
+                        placeholderTextColor="#B8B8B8"
                         value={messageText}
                         onChangeText={setMessageText}
                         multiline
@@ -513,7 +515,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         {isLoading || isUploading ? (
                             <ActivityIndicator size="small" color="#000" />
                         ) : (
-                            <Text style={styles.sendButtonText}>Send</Text>
+                            <ArrowRightIcon />
                         )}
                     </TouchableOpacity>
                 </View>
