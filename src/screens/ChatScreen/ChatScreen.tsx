@@ -5,6 +5,7 @@ import BottomTabNav from '@/components/BottomTabNav';
 import { supabase } from '@/services/supabase/client';
 import Toast from 'react-native-toast-message';
 import * as ImagePicker from 'expo-image-picker';
+import TypingIndicator from '@/components/TypingIndicator';
 
 interface Message {
     id: string;
@@ -29,6 +30,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
+    const [waitingForResponse, setWaitingForResponse] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
 
     const suggestionPrompts = [
@@ -97,7 +99,14 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 },
                 (payload) => {
                     if (payload.eventType === 'INSERT') {
-                        setMessages(prev => [...prev, payload.new as Message]);
+                        const newMessage = payload.new as Message;
+                        setMessages(prev => [...prev, newMessage]);
+
+                        // If assistant message received, stop waiting
+                        if (newMessage.role === 'assistant') {
+                            setWaitingForResponse(false);
+                        }
+
                         // Auto scroll to bottom on new message
                         setTimeout(() => {
                             scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -361,6 +370,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
             setMessageText('');
             setImageUri(null);
+            setWaitingForResponse(true);
 
             // Scroll to bottom after sending
             setTimeout(() => {
@@ -373,6 +383,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 text1: 'Failed to send message',
                 position: 'bottom',
             });
+            setWaitingForResponse(false);
         } finally {
             setIsLoading(false);
         }
@@ -451,6 +462,11 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 ) : (
                     <View style={styles.messagesContainer}>
                         {messages.map(renderMessage)}
+                        {waitingForResponse && (
+                            <View style={[styles.messageBubble, styles.assistantMessage]}>
+                                <TypingIndicator />
+                            </View>
+                        )}
                     </View>
                 )}
             </ScrollView>
@@ -489,10 +505,10 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         editable={!isLoading && !isUploading}
                     />
                     <TouchableOpacity
-                        style={[styles.sendButton, (isLoading || isUploading || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
+                        style={[styles.sendButton, (isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
                         onPress={handleSendMessage}
                         activeOpacity={0.7}
-                        disabled={isLoading || isUploading || (!messageText.trim() && !imageUri)}
+                        disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
                     >
                         {isLoading || isUploading ? (
                             <ActivityIndicator size="small" color="#000" />
