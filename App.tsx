@@ -10,11 +10,15 @@ import SignIn from './src/screens/SignIn/SignIn';
 import SignUp from './src/screens/SignUp/SignUp';
 import ResetPassword from './src/screens/ResetPassword/ResetPassword';
 import ChatScreen from './src/screens/ChatScreen/ChatScreen';
+import FamilyTreeScreen from './src/screens/FamilyTree/FamilyTree';
+import ProfileScreen from './src/screens/Profile/Profile';
 import { GlobalStyles as styles } from '@/styles/Global.styles';
 import { useFonts } from 'expo-font';
 import { supabase } from '@/services/supabase/client';
 
 const Stack = createNativeStackNavigator();
+
+type TabName = 'MemoryTree' | 'Chat' | 'Profile';
 
 export default function App() {
   const [loaded] = useFonts({
@@ -27,6 +31,7 @@ export default function App() {
 
   // null = checking, true = signed in, false = signed out
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [activeTab, setActiveTab] = useState<TabName>('Chat');
 
   useEffect(() => {
     let mounted = true;
@@ -41,6 +46,9 @@ export default function App() {
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session?.access_token);
+      if (session?.access_token) {
+        setActiveTab('Chat'); // Reset to Chat screen on sign in
+      }
     });
 
     return () => {
@@ -49,7 +57,24 @@ export default function App() {
     };
   }, []);
 
+  const handleTabChange = (tab: TabName) => {
+    setActiveTab(tab);
+  };
+
   if (!loaded || isAuthenticated === null) return null; // avoid flash
+
+  // Render the appropriate screen based on active tab
+  const renderAuthenticatedScreen = () => {
+    switch (activeTab) {
+      case 'MemoryTree':
+        return <FamilyTreeScreen onTabChange={handleTabChange} />;
+      case 'Profile':
+        return <ProfileScreen onTabChange={handleTabChange} />;
+      case 'Chat':
+      default:
+        return <ChatScreen onTabChange={handleTabChange} />;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -57,7 +82,9 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {isAuthenticated ? (
-            <Stack.Screen name="Chat" component={ChatScreen} />
+            <Stack.Screen name="Main">
+              {() => renderAuthenticatedScreen()}
+            </Stack.Screen>
           ) : (
             <>
               <Stack.Screen name="Landing">

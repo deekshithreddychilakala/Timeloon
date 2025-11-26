@@ -1,33 +1,111 @@
 import { StyleSheet } from 'react-native';
 import colors from '@/styles/colors';
+import { Fonts } from '@/utils/fonts';
 
 export const ChatStyles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
         backgroundColor: colors.background,
+    },
+    scrollContent: {
+        flexGrow: 1,
+        paddingBottom: 140, // space for input + bottom tab
+    },
+    header: {
+        paddingTop: 60,
+        paddingHorizontal: 27.3,
+        paddingBottom: 20,
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        borderBottomWidth: 1,
+        borderBottomColor: colors.tertiary,
+    },
+    title: {
+        fontFamily: Fonts.heavy,
+        fontSize: 20,
+        letterSpacing: -0.4,
+        color: colors.black,
+        marginBottom: 4,
+    },
+    subtitle: {
+        fontFamily: Fonts.book,
+        fontSize: 13,
+        letterSpacing: -0.13,
+        color: colors.black02,
+    },
+    content: {
+        flex: 1,
+        padding: 27.3,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    title: {
-        fontSize: 28,
-        fontWeight: '700',
-        marginBottom: 8,
-    },
-    subtitle: {
+    centerText: {
+        fontFamily: Fonts.medium,
         fontSize: 14,
         color: colors.black04,
-        marginBottom: 24,
+        textAlign: 'center',
+        marginBottom: 30,
     },
-    signOut: {
-        backgroundColor: '#eee',
-        paddingVertical: 12,
+    promptsContainer: {
+        width: '100%',
+        gap: 12,
+    },
+    promptButton: {
+        paddingVertical: 16,
         paddingHorizontal: 20,
-        borderRadius: 8,
+        backgroundColor: 'rgba(255,255,255,0.6)',
+        borderWidth: 1,
+        borderColor: colors.tertiary,
+        borderRadius: 12,
     },
-    signOutText: {
-        color: colors.black03,
-        fontWeight: '600',
+    promptText: {
+        fontFamily: Fonts.medium,
+        fontSize: 14,
+        letterSpacing: -0.14,
+        color: colors.black,
+        textAlign: 'center',
+    },
+    inputContainer: {
+        position: 'absolute',
+        bottom: 80, // above bottom tab
+        left: 0,
+        right: 0,
+        paddingHorizontal: 27.3,
+        paddingVertical: 12,
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        borderTopWidth: 1,
+        borderTopColor: colors.tertiary,
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+    },
+    input: {
+        flex: 1,
+        minHeight: 40,
+        maxHeight: 100,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        backgroundColor: colors.background,
+        borderWidth: 1,
+        borderColor: colors.tertiary,
+        borderRadius: 20,
+        fontFamily: Fonts.book,
+        fontSize: 14,
+        letterSpacing: -0.14,
+        color: colors.black,
+        marginRight: 8,
+    },
+    sendButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        backgroundColor: colors.primary,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    sendButtonText: {
+        fontFamily: Fonts.heavy,
+        fontSize: 14,
+        letterSpacing: -0.28,
+        color: colors.black,
     },
 });
 
