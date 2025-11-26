@@ -101,11 +101,53 @@ export const ChatStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    sendButtonDisabled: {
+        opacity: 0.5,
+    },
     sendButtonText: {
         fontFamily: Fonts.heavy,
         fontSize: 14,
         letterSpacing: -0.28,
         color: colors.black,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 27.3,
+    },
+    messagesContainer: {
+        padding: 27.3,
+        paddingTop: 20,
+    },
+    messageBubble: {
+        maxWidth: '80%',
+        marginBottom: 12,
+        paddingVertical: 10,
+        paddingHorizontal: 14,
+        borderRadius: 16,
+    },
+    userMessage: {
+        alignSelf: 'flex-end',
+        backgroundColor: colors.primary,
+        borderBottomRightRadius: 4,
+    },
+    assistantMessage: {
+        alignSelf: 'flex-start',
+        backgroundColor: colors.surface,
+        borderBottomLeftRadius: 4,
+    },
+    messageText: {
+        fontFamily: Fonts.book,
+        fontSize: 14,
+        letterSpacing: -0.14,
+        lineHeight: 20,
+    },
+    userMessageText: {
+        color: colors.black,
+    },
+    assistantMessageText: {
+        color: colors.black03,
     },
 });
 
