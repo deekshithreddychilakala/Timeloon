@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Image, ActionSheetIOS, Platform, Alert } from 'react-native';
 import { ChatStyles as styles } from './ChatScreen.styles';
 import BottomTabNav from '@/components/BottomTabNav';
 import { supabase } from '@/services/supabase/client';
@@ -122,8 +122,108 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         };
     }, []);
 
-    const pickImage = async () => {
+    const selectImageSource = () => {
+        if (Platform.OS === 'ios') {
+            ActionSheetIOS.showActionSheetWithOptions(
+                {
+                    options: ['Cancel', 'Take Photo', 'Choose from Library'],
+                    cancelButtonIndex: 0,
+                },
+                (buttonIndex) => {
+                    if (buttonIndex === 1) {
+                        pickImageFromCamera();
+                    } else if (buttonIndex === 2) {
+                        pickImageFromLibrary();
+                    }
+                }
+            );
+        } else {
+            Alert.alert(
+                'Select Image',
+                'Choose an option',
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Take Photo', onPress: pickImageFromCamera },
+                    { text: 'Choose from Library', onPress: pickImageFromLibrary },
+                ],
+                { cancelable: true }
+            );
+        }
+    };
+
+    const validateImageSize = async (uri: string): Promise<boolean> => {
         try {
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            const sizeInMB = blob.size / (1024 * 1024);
+
+            if (sizeInMB > 5) {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Image too large',
+                    text2: 'Please select an image smaller than 5MB',
+                    position: 'bottom',
+                    visibilityTime: 3000,
+                });
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.error('Error validating image size:', error);
+            return true; // Allow upload if validation fails
+        }
+    };
+
+    const pickImageFromCamera = async () => {
+        try {
+            const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+            if (status !== 'granted') {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Permission denied',
+                    text2: 'We need camera permissions to take photos',
+                    position: 'bottom',
+                });
+                return;
+            }
+
+            const result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                quality: 0.8,
+            });
+
+            if (!result.canceled && result.assets[0]) {
+                const isValid = await validateImageSize(result.assets[0].uri);
+                if (isValid) {
+                    setImageUri(result.assets[0].uri);
+                }
+            }
+        } catch (error) {
+            console.error('Error taking photo:', error);
+            Toast.show({
+                type: 'error',
+                text1: 'Failed to take photo',
+                position: 'bottom',
+            });
+        }
+    };
+
+    const pickImageFromLibrary = async () => {
+        try {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+            if (status !== 'granted') {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Permission denied',
+                    text2: 'We need camera roll permissions',
+                    position: 'bottom',
+                });
+                return;
+            }
+
             const result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
@@ -131,7 +231,10 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             });
 
             if (!result.canceled && result.assets[0]) {
-                setImageUri(result.assets[0].uri);
+                const isValid = await validateImageSize(result.assets[0].uri);
+                if (isValid) {
+                    setImageUri(result.assets[0].uri);
+                }
             }
         } catch (error) {
             console.error('Error picking image:', error);
@@ -367,7 +470,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 <View style={styles.inputRow}>
                     <TouchableOpacity
                         style={styles.imageButton}
-                        onPress={pickImage}
+                        onPress={selectImageSource}
                         disabled={isLoading || isUploading}
                     >
                         {isUploading ? (
