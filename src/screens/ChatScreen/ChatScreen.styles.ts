@@ -149,6 +149,55 @@ export const ChatStyles = StyleSheet.create({
     assistantMessageText: {
         color: colors.black03,
     },
+    messageImage: {
+        width: 200,
+        height: 200,
+        borderRadius: 12,
+        marginBottom: 8,
+    },
+    messageTextWithImage: {
+        marginTop: 4,
+    },
+    imagePreviewContainer: {
+        position: 'relative',
+        marginBottom: 8,
+        alignSelf: 'flex-start',
+    },
+    imagePreview: {
+        width: 80,
+        height: 80,
+        borderRadius: 8,
+    },
+    removeImageButton: {
+        position: 'absolute',
+        top: -8,
+        right: -8,
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        backgroundColor: colors.black03,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    removeImageText: {
+        color: colors.secondary,
+        fontSize: 12,
+        fontFamily: Fonts.heavy,
+    },
+    inputRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+    },
+    imageButton: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 8,
+    },
+    imageButtonText: {
+        fontSize: 24,
+    },
 });
 
 export default ChatStyles;

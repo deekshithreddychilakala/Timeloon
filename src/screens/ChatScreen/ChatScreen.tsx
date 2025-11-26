@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
 import { ChatStyles as styles } from './ChatScreen.styles';
 import BottomTabNav from '@/components/BottomTabNav';
 import { supabase } from '@/services/supabase/client';
 import Toast from 'react-native-toast-message';
+import * as ImagePicker from 'expo-image-picker';
 
 interface Message {
     id: string;
@@ -11,6 +12,8 @@ interface Message {
     content: string;
     role: 'user' | 'assistant';
     created_at: string;
+    type?: 'text' | 'image';
+    image_path?: string;
 }
 
 interface ChatScreenProps {
@@ -23,6 +26,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [userId, setUserId] = useState<string | null>(null);
+    const [imageUri, setImageUri] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
     const scrollViewRef = useRef<ScrollView>(null);
 
     const suggestionPrompts = [
@@ -116,24 +122,142 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         };
     }, []);
 
+    const pickImage = async () => {
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                quality: 0.8,
+            });
+
+            if (!result.canceled && result.assets[0]) {
+                setImageUri(result.assets[0].uri);
+            }
+        } catch (error) {
+            console.error('Error picking image:', error);
+            Toast.show({
+                type: 'error',
+                text1: 'Failed to select image',
+                position: 'bottom',
+            });
+        }
+    };
+
+    const uploadImage = async (uri: string): Promise<string | null> => {
+        if (!userId) return null;
+
+        setIsUploading(true);
+
+        try {
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            const fileExt = uri.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+            const filePath = `${userId}/${fileName}`;
+
+            const { data, error } = await supabase.storage
+                .from('message_images')
+                .upload(filePath, blob, {
+                    cacheControl: '3600',
+                    upsert: false,
+                });
+
+            if (error) throw error;
+
+            return data.path;
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            Toast.show({
+                type: 'error',
+                text1: 'Failed to upload image',
+                position: 'bottom',
+            });
+            return null;
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const getSignedUrl = async (path: string): Promise<string> => {
+        try {
+            const { data, error } = await supabase.storage
+                .from('message_images')
+                .createSignedUrl(path, 3600);
+
+            if (error) throw error;
+            return data.signedUrl;
+        } catch (error) {
+            console.error('Error getting signed URL:', error);
+            return '';
+        }
+    };
+
+    // Load image URLs for messages
+    useEffect(() => {
+        const loadImageUrls = async () => {
+            const pathsToFetch: string[] = [];
+
+            for (const message of messages) {
+                if (message.type === 'image' && message.image_path && message.user_id === userId) {
+                    if (!imageUrls[message.image_path]) {
+                        pathsToFetch.push(message.image_path);
+                    }
+                }
+            }
+
+            if (pathsToFetch.length === 0) return;
+
+            try {
+                const urls: Record<string, string> = {};
+                for (const path of pathsToFetch) {
+                    const url = await getSignedUrl(path);
+                    if (url) urls[path] = url;
+                }
+
+                if (Object.keys(urls).length > 0) {
+                    setImageUrls(prev => ({ ...prev, ...urls }));
+                }
+            } catch (error) {
+                console.error('Error loading image URLs:', error);
+            }
+        };
+
+        if (userId && messages.length > 0) {
+            loadImageUrls();
+        }
+    }, [messages, userId]);
+
     const handleSendMessage = async () => {
-        if (!messageText.trim() || !userId) return;
+        if ((!messageText.trim() && !imageUri) || !userId) return;
 
         setIsLoading(true);
         const content = messageText.trim();
 
         try {
+            let imagePath = null;
+
+            if (imageUri) {
+                imagePath = await uploadImage(imageUri);
+                if (!imagePath && !content) {
+                    setIsLoading(false);
+                    return;
+                }
+            }
+
             const { error } = await supabase
                 .from('messages')
                 .insert({
                     user_id: userId,
                     content: content,
-                    role: 'user'
+                    role: 'user',
+                    type: imageUri ? 'image' : 'text',
+                    image_path: imagePath,
                 });
 
             if (error) throw error;
 
             setMessageText('');
+            setImageUri(null);
 
             // Scroll to bottom after sending
             setTimeout(() => {
@@ -153,6 +277,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
     const renderMessage = (message: Message) => {
         const isUserMessage = message.role === 'user';
+        const imageUrl = message.image_path ? imageUrls[message.image_path] : null;
 
         return (
             <View
@@ -162,12 +287,22 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                     isUserMessage ? styles.userMessage : styles.assistantMessage
                 ]}
             >
-                <Text style={[
-                    styles.messageText,
-                    isUserMessage ? styles.userMessageText : styles.assistantMessageText
-                ]}>
-                    {message.content}
-                </Text>
+                {message.type === 'image' && imageUrl && (
+                    <Image
+                        source={{ uri: imageUrl }}
+                        style={styles.messageImage}
+                        resizeMode="cover"
+                    />
+                )}
+                {message.content ? (
+                    <Text style={[
+                        styles.messageText,
+                        isUserMessage ? styles.userMessageText : styles.assistantMessageText,
+                        (message.type === 'image' && imageUrl) ? styles.messageTextWithImage : null
+                    ]}>
+                        {message.content}
+                    </Text>
+                ) : null}
             </View>
         );
     };
@@ -218,27 +353,51 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             </ScrollView>
 
             <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Type your message..."
-                    placeholderTextColor="#999"
-                    value={messageText}
-                    onChangeText={setMessageText}
-                    multiline
-                    editable={!isLoading}
-                />
-                <TouchableOpacity
-                    style={[styles.sendButton, (isLoading || !messageText.trim()) && styles.sendButtonDisabled]}
-                    onPress={handleSendMessage}
-                    activeOpacity={0.7}
-                    disabled={isLoading || !messageText.trim()}
-                >
-                    {isLoading ? (
-                        <ActivityIndicator size="small" color="#000" />
-                    ) : (
-                        <Text style={styles.sendButtonText}>Send</Text>
-                    )}
-                </TouchableOpacity>
+                {imageUri && (
+                    <View style={styles.imagePreviewContainer}>
+                        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                        <TouchableOpacity
+                            style={styles.removeImageButton}
+                            onPress={() => setImageUri(null)}
+                        >
+                            <Text style={styles.removeImageText}>✕</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+                <View style={styles.inputRow}>
+                    <TouchableOpacity
+                        style={styles.imageButton}
+                        onPress={pickImage}
+                        disabled={isLoading || isUploading}
+                    >
+                        {isUploading ? (
+                            <ActivityIndicator size="small" color="#666" />
+                        ) : (
+                            <Text style={styles.imageButtonText}>📷</Text>
+                        )}
+                    </TouchableOpacity>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Type your message..."
+                        placeholderTextColor="#999"
+                        value={messageText}
+                        onChangeText={setMessageText}
+                        multiline
+                        editable={!isLoading && !isUploading}
+                    />
+                    <TouchableOpacity
+                        style={[styles.sendButton, (isLoading || isUploading || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
+                        onPress={handleSendMessage}
+                        activeOpacity={0.7}
+                        disabled={isLoading || isUploading || (!messageText.trim() && !imageUri)}
+                    >
+                        {isLoading || isUploading ? (
+                            <ActivityIndicator size="small" color="#000" />
+                        ) : (
+                            <Text style={styles.sendButtonText}>Send</Text>
+                        )}
+                    </TouchableOpacity>
+                </View>
             </View>
 
             <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
