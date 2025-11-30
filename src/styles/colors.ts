@@ -29,6 +29,8 @@ export const colors = {
     black06: 'rgba(28, 28, 30, 0.40)',
     black07: 'rgba(28, 28, 30, 0.50)',
     black08: 'rgba(0, 0, 0, 0.55)',
+    black09: 'rgba(255,255,255,0.95)',
+    black10: 'rgba(28, 28, 30, 0.60)',
     textUnderlineColor: 'rgba(42, 42, 44, 0.15)',
 
     yellow01: '#FFDFA6',
@@ -47,6 +49,12 @@ export const colors = {
         flex: 1,
         height: '100%',
         padding: 26
+    } as ViewStyle,
+
+    mainScreensBGElement: {
+        flex: 1,
+        height: '100%',
+        padding: 0
     } as ViewStyle,
 
     commonScreensBGConfig: {

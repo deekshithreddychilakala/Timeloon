@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Fonts } from '@/utils/fonts';
 import colors from '@/styles/colors';
 
-// Import tab icons - regular and gold versions
 import MemoryTreeIcon from '../../assets/icons/memory_tree.svg';
 import MemoryTreeIconGold from '../../assets/icons/memory_tree_gold.svg';
 import ChatIcon from '../../assets/icons/ai_chat.svg';
 import ChatIconGold from '../../assets/icons/ai_chat_gold.svg';
 import ProfileIcon from '../../assets/icons/profile.svg';
 import ProfileIconGold from '../../assets/icons/profile_gold.svg';
+import { BlurView } from 'expo-blur';
 
 type TabItem = 'MemoryTree' | 'Chat' | 'Profile';
 
@@ -18,82 +19,162 @@ interface BottomTabNavProps {
     onTabPress: (tab: TabItem) => void;
 }
 
-const BottomTabNav: React.FC<BottomTabNavProps> = ({ activeTab, onTabPress }) => {
-    const tabs: Array<{ key: TabItem; label: string; Icon: any; IconActive: any }> = [
-        { key: 'MemoryTree', label: 'Memory Tree', Icon: MemoryTreeIcon, IconActive: MemoryTreeIconGold },
-        { key: 'Chat', label: 'AI Chat', Icon: ChatIcon, IconActive: ChatIconGold },
-        { key: 'Profile', label: 'Profile', Icon: ProfileIcon, IconActive: ProfileIconGold },
-    ];
+const BottomTabNav: React.FC<BottomTabNavProps> = ({
+    activeTab,
+    onTabPress,
+}) => {
+    const tabs = [
+        {
+            key: 'MemoryTree',
+            label: 'Memory Tree',
+            Icon: MemoryTreeIcon,
+            IconActive: MemoryTreeIconGold,
+        },
+        {
+            key: 'Chat',
+            label: 'AI Chat',
+            Icon: ChatIcon,
+            IconActive: ChatIconGold,
+        },
+        {
+            key: 'Profile',
+            label: 'Profile',
+            Icon: ProfileIcon,
+            IconActive: ProfileIconGold,
+        },
+    ] as const;
 
     return (
-        <View style={styles.container}>
-            {tabs.map(({ key, label, Icon, IconActive }) => {
-                const isActive = activeTab === key;
-                const ActiveIcon = isActive ? IconActive : Icon;
-                return (
-                    <TouchableOpacity
-                        key={key}
-                        style={[styles.tab, isActive && styles.activeTab]}
-                        onPress={() => onTabPress(key)}
-                        accessibilityRole="button"
-                        accessibilityLabel={`Navigate to ${label}`}
+        <View style={styles.wrapper}>
+            {/* Shadow wrapper (DO NOT put BlurView shadow directly) */}
+            <View style={styles.shadowContainer}>
+                {/* Rounded container that clips blur + content */}
+                <View style={styles.glassCard}>
+                    {/* Backdrop blur */}
+                    <BlurView
+                        intensity={80} // stronger so it’s obvious
+                        tint="light"
+                        style={StyleSheet.absoluteFill}
+                    />
+
+                    {/* Light vertical gradient & content */}
+                    <LinearGradient
+                        colors={['rgba(255,255,255,0.25)', 'rgba(255,255,255,0.08)']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                        style={styles.card}
                     >
-                        <View style={styles.iconContainer}>
-                            <ActiveIcon width={24} height={24} />
+                        {/* Inner border to fake inset highlight */}
+                        <View style={styles.innerBorder} />
+
+                        <View style={styles.row}>
+                            {tabs.map(({ key, label, Icon, IconActive }) => {
+                                const isActive = activeTab === key;
+                                const IconComp = isActive ? IconActive : Icon;
+
+                                return (
+                                    <TouchableOpacity
+                                        key={key}
+                                        style={styles.tab}
+                                        onPress={() => onTabPress(key)}
+                                        activeOpacity={0.85}
+                                    >
+                                        <IconComp
+                                            width={22}
+                                            height={22}
+                                            opacity={isActive ? 1 : 0.55}
+                                        />
+                                        <Text
+                                            style={[
+                                                styles.label,
+                                                isActive && styles.labelActive,
+                                            ]}
+                                        >
+                                            {label}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
                         </View>
-                        <Text style={[styles.label, isActive && styles.activeLabel]}>{label}</Text>
-                    </TouchableOpacity>
-                );
-            })}
+                    </LinearGradient>
+                </View>
+            </View>
         </View>
     );
 };
 
+export default BottomTabNav;
+
+const PILL_RADIUS = 24;
+
 const styles = StyleSheet.create({
-    container: {
+    // Positions pill above the bottom edge
+    wrapper: {
         position: 'absolute',
-        bottom: 23,
-        left: '6.5%',
-        right: '6.5%',
-        height: 62,
-        flexDirection: 'row',
+        left: 26,
+        right: 26,
+        bottom: 23, // adjust with SafeArea if necessary
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 25,
-        paddingVertical: 6,
-        backgroundColor: 'rgba(255,255,255,0.95)',
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.34)',
     },
+
+    // Shadow container – approximates your big soft glow
+    shadowContainer: {
+        width: '100%',
+        borderRadius: PILL_RADIUS,
+        // Solid (non-transparent) background to allow efficient shadow rasterization
+        backgroundColor: '#FFFFFF',
+        // iOS shadow
+        shadowColor: '#000',
+        shadowOpacity: 0.12,
+        shadowRadius: 28,
+        shadowOffset: { width: 0, height: 12 },
+        // Android elevation
+        elevation: 18,
+    },
+
+    // Outer rounded glass card that clips blur
+    glassCard: {
+        borderRadius: PILL_RADIUS,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.25)',
+        backgroundColor: 'rgba(255,255,255,0.04)',
+    },
+
+    // Content pill
+    card: {
+        borderRadius: PILL_RADIUS,
+        paddingVertical: 10,
+        paddingHorizontal: 25,
+        justifyContent: 'center',
+    },
+
+    innerBorder: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: PILL_RADIUS,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.5)',
+    },
+
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 32,
+    },
+
     tab: {
         flex: 1,
-        height: 50,
-        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 16,
+        gap: 4,
     },
-    activeTab: {
-        backgroundColor: 'rgba(255,255,255,0.12)',
-    },
-    iconContainer: {
-        width: 24,
-        height: 24,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+
     label: {
-        fontFamily: Fonts.medium,
+        fontFamily: Fonts.book,
         fontSize: 10,
-        letterSpacing: -0.1,
         color: colors.black03,
     },
-    activeLabel: {
+
+    labelActive: {
         color: colors.black,
     },
 });
-
-export default BottomTabNav;

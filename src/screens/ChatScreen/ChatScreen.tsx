@@ -8,6 +8,10 @@ import * as ImagePicker from 'expo-image-picker';
 import TypingIndicator from '@/components/TypingIndicator';
 import PlusIcon from '@/components/icons/PlusIcon';
 import ArrowRightIcon from '@/components/icons/ArrowRightIcon';
+import colors from '@/styles/colors';
+import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { GlobalStyles } from '@/styles/Global.styles';
 
 interface Message {
     id: string;
@@ -425,12 +429,18 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Timeloon AI</Text>
-                <Text style={styles.subtitle}>Ask anything. Reflect. Capture memories.</Text>
-            </View>
+            <LinearGradient
+                colors={colors.commonScreensBGConfig.colors}
+                start={colors.commonScreensBGConfig.start}
+                end={colors.commonScreensBGConfig.end}
+                style={colors.mainScreensBGElement}>
+                {/* <SafeAreaView> */}
+                <View style={GlobalStyles.mainScreenTitleDescContainer}>
+                    <Text style={GlobalStyles.mainScreenTitle}>Timeloon AI</Text>
+                    <Text style={GlobalStyles.mainScreenDescription}>Ask anything. Reflect. Capture memories.</Text>
+                </View>
 
-            <ScrollView
+                {/* <ScrollView
                 ref={scrollViewRef}
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
@@ -519,9 +529,12 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         )}
                     </TouchableOpacity>
                 </View>
-            </View>
+            </View> */}
 
-            <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
+                <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
+                {/* </SafeAreaView> */}
+
+            </LinearGradient>
         </View>
     );
 };
