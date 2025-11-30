@@ -45,20 +45,26 @@ export const ChatStyles = StyleSheet.create({
         color: colors.black,
         textAlign: 'left',
     },
-    inputContainer: {
+    inputShadowContainer: {
         marginHorizontal: 20,
-        padding: 15,
-        gap: 30,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: '#FFDFA6',
         marginBottom: 100,
+        borderRadius: 14,
+        // White solid background for efficient shadow rasterization
+        backgroundColor: '#FFFFFF',
         // Shadow matching Figma
         shadowColor: '#FFDFA6',
         shadowOffset: { width: 0, height: -5 },
         shadowOpacity: 0.34,
         shadowRadius: 11,
         elevation: 8,
+    },
+    inputContainer: {
+        padding: 15,
+        gap: 30,
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: '#FFDFA6',
+        overflow: 'hidden', // Ensure gradient respects border radius
     },
     input: {
         flex: 1,

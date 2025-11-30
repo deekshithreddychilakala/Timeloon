@@ -7,7 +7,7 @@ import Toast from 'react-native-toast-message';
 import * as ImagePicker from 'expo-image-picker';
 import TypingIndicator from '@/components/TypingIndicator';
 import PlusIcon from '../../../assets/icons/plus.svg';
-import ArrowRightIcon from '../../../assets/icons/plus.svg';
+import ArrowRightIcon from '../../../assets/icons/arrow_right.svg';
 import colors from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalStyles } from '@/styles/Global.styles';
@@ -482,72 +482,72 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
                 </ScrollView>
 
-                <LinearGradient
-                    colors={['#FFF7EA', '#FFF']}
-                    start={{ x: 0.5, y: 0 }}
-                    end={{ x: 0.5, y: 1 }}
-                    style={styles.inputContainer}
-                >
-                    {imageUri && (
-                        <View style={styles.imagePreviewContainer}>
-                            <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-                            <TouchableOpacity
-                                style={styles.removeImageButton}
-                                onPress={() => setImageUri(null)}
-                            >
-                                <Text style={styles.removeImageText}>✕</Text>
-                            </TouchableOpacity>
+                <View style={styles.inputShadowContainer}>
+                    <LinearGradient
+                        colors={['#FFF7EA', '#FFF']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                        style={styles.inputContainer}
+                    >
+                        {imageUri && (
+                            <View style={styles.imagePreviewContainer}>
+                                <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                                <TouchableOpacity
+                                    style={styles.removeImageButton}
+                                    onPress={() => setImageUri(null)}
+                                >
+                                    <Text style={styles.removeImageText}>✕</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                        <View style={styles.inputRow}>
+                            <View style={styles.inputField}>
+                                <TouchableOpacity
+                                    style={styles.imageButton}
+                                    onPress={selectImageSource}
+                                    disabled={isLoading || isUploading}
+                                >
+                                    {isUploading ? (
+                                        <ActivityIndicator size="small" color="#E5AB47" />
+                                    ) : (
+                                        <PlusIcon width={20} height={20} />
+                                    )}
+                                </TouchableOpacity>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="How can I help you today?"
+                                    placeholderTextColor="#B8B8B8"
+                                    value={messageText}
+                                    onChangeText={setMessageText}
+                                    multiline
+                                    editable={!isLoading && !isUploading}
+                                />
+                            </View>
+                            <View style={styles.actionButtons}>
+                                <TouchableOpacity
+                                    style={styles.actionButton}
+                                    onPress={selectImageSource}
+                                    disabled={isLoading || isUploading}
+                                >
+                                    <PlusIcon width={24} height={24} />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.sendButton, (isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
+                                    onPress={handleSendMessage}
+                                    activeOpacity={0.7}
+                                    disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
+                                >
+                                    {isLoading || isUploading ? (
+                                        <ActivityIndicator size="small" color="#000" />
+                                    ) : (
+                                        <ArrowRightIcon width={24} height={24} />
+                                    )}
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    )}
-                    <View style={styles.inputRow}>
-                        <View style={styles.inputField}>
-                            <TouchableOpacity
-                                style={styles.imageButton}
-                                onPress={selectImageSource}
-                                disabled={isLoading || isUploading}
-                            >
-                                {isUploading ? (
-                                    <ActivityIndicator size="small" color="#E5AB47" />
-                                ) : (
-                                    <PlusIcon width={20} height={20} />
-                                )}
-                            </TouchableOpacity>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="How can I help you today?"
-                                placeholderTextColor="#B8B8B8"
-                                value={messageText}
-                                onChangeText={setMessageText}
-                                multiline
-                                editable={!isLoading && !isUploading}
-                            />
-                        </View>
-                        <View style={styles.actionButtons}>
-                            <TouchableOpacity
-                                style={styles.actionButton}
-                                onPress={selectImageSource}
-                                disabled={isLoading || isUploading}
-                            >
-                                <PlusIcon width={24} height={24} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.sendButton, (isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
-                                onPress={handleSendMessage}
-                                activeOpacity={0.7}
-                                disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
-                            >
-                                {isLoading || isUploading ? (
-                                    <ActivityIndicator size="small" color="#000" />
-                                ) : (
-                                    <ArrowRightIcon width={24} height={24} />
-                                )}
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </LinearGradient>
+                    </LinearGradient>
+                </View>
                 <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
-
-
             </LinearGradient>
         </View>
     );
