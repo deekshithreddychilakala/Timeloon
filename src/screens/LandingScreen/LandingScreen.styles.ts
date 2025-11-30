@@ -8,7 +8,7 @@ export const LandingStyles = StyleSheet.create({
         flexShrink: 0,
         margin: 'auto',
         textAlign: 'center',
-        backgroundColor: colors.background,
+        backgroundColor: colors.white,
         padding: 28,
         flexDirection: 'column'
     },

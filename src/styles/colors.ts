@@ -16,7 +16,7 @@ export const colors = {
     tertiary: '#FFE792',
 
     // Surfaces & backgrounds
-    background: '#FFFFFF',
+    white: '#FFFFFF',
     surface: '#F2F2F2',
     muted: '#E6E6E6',
 
@@ -31,6 +31,8 @@ export const colors = {
     black08: 'rgba(0, 0, 0, 0.55)',
     black09: 'rgba(255,255,255,0.95)',
     black10: 'rgba(28, 28, 30, 0.60)',
+    black11: 'rgba(28, 28, 30, 0.20)',
+    black12: 'rgba(218, 218, 218, 0.40)',
     textUnderlineColor: 'rgba(42, 42, 44, 0.15)',
 
     yellow01: '#FFDFA6',

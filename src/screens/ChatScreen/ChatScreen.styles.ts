@@ -4,8 +4,7 @@ import { Fonts } from '@/utils/fonts';
 
 export const ChatStyles = StyleSheet.create({
     container: {
-        flex: 1,
-        // backgroundColor: colors.background,
+        flex: 1
     },
     scrollView: {
         flex: 1,
@@ -13,43 +12,44 @@ export const ChatStyles = StyleSheet.create({
     scrollContent: {
         flexGrow: 1
     },
-    content: {
+    suggestionsContainer: {
         flex: 1,
         padding: 27.3,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     centerText: {
-        fontFamily: Fonts.medium,
+        fontFamily: Fonts.book,
         fontSize: 14,
-        color: colors.black04,
+        color: colors.black11,
         textAlign: 'center',
-        marginBottom: 30,
+        letterSpacing: -.15
     },
     promptsContainer: {
         width: '100%',
         gap: 12,
     },
     promptButton: {
-        paddingVertical: 16,
-        paddingHorizontal: 20,
-        backgroundColor: 'rgba(255,255,255,0.6)',
+        paddingVertical: 19,
+        paddingHorizontal: 21,
+        backgroundColor: colors.white,
         borderWidth: 1,
-        borderColor: colors.tertiary,
-        borderRadius: 12,
+        borderColor: colors.black12,
+        borderRadius: 14,
     },
     promptText: {
         fontFamily: Fonts.medium,
         fontSize: 14,
-        letterSpacing: -0.14,
+        letterSpacing: -0.15,
+        lineHeight: 21,
         color: colors.black,
-        textAlign: 'center',
+        textAlign: 'left',
     },
     inputContainer: {
         paddingHorizontal: 27.3,
         paddingVertical: 12,
-        backgroundColor: 'rgba(255,255,255,0.95)',
-        borderTopWidth: 1,
+        backgroundColor: 'transparent',
+        // borderTopWidth: 1,
         borderTopColor: colors.tertiary,
         marginBottom: 80, // space for bottom tab
     },
@@ -160,7 +160,7 @@ export const ChatStyles = StyleSheet.create({
     inputRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: colors.background,
+        backgroundColor: colors.white,
         borderWidth: 1.5,
         borderColor: '#E5AB47',
         borderRadius: 28,

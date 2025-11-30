@@ -5,7 +5,7 @@ import { Fonts } from '@/utils/fonts';
 export const ProfileStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.background,
+        backgroundColor: colors.white,
     },
     scrollContent: {
         flexGrow: 1,

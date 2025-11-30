@@ -10,7 +10,6 @@ import PlusIcon from '@/components/icons/PlusIcon';
 import ArrowRightIcon from '@/components/icons/ArrowRightIcon';
 import colors from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyles } from '@/styles/Global.styles';
 
 interface Message {
@@ -40,9 +39,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
     const scrollViewRef = useRef<ScrollView>(null);
 
     const suggestionPrompts = [
-        "Tell me about your childhood",
-        "What was your first job?",
-        "Share a favorite family memory"
+        "What memory stands out from this week?",
+        "Who in your family influenced you the most growing up?",
+        "Tell me a moment from childhood you never want to forget."
     ];
 
     // Get current user
@@ -434,105 +433,104 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 start={colors.commonScreensBGConfig.start}
                 end={colors.commonScreensBGConfig.end}
                 style={colors.mainScreensBGElement}>
-                {/* <SafeAreaView> */}
                 <View style={GlobalStyles.mainScreenTitleDescContainer}>
                     <Text style={GlobalStyles.mainScreenTitle}>Timeloon AI</Text>
                     <Text style={GlobalStyles.mainScreenDescription}>Ask anything. Reflect. Capture memories.</Text>
                 </View>
 
-                {/* <ScrollView
-                ref={scrollViewRef}
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
-                onContentSizeChange={() => {
-                    scrollViewRef.current?.scrollToEnd({ animated: true });
-                }}
-            >
-                {isInitialLoading ? (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" color="#E5AB47" />
-                    </View>
-                ) : messages.length === 0 ? (
-                    <View style={styles.content}>
-                        <Text style={styles.centerText}>
-                            Start a conversation to capture your memories
-                        </Text>
-
-                        <View style={styles.promptsContainer}>
-                            {suggestionPrompts.map((prompt, index) => (
-                                <TouchableOpacity
-                                    key={index}
-                                    style={styles.promptButton}
-                                    onPress={() => setMessageText(prompt)}
-                                    activeOpacity={0.7}
-                                >
-                                    <Text style={styles.promptText}>{prompt}</Text>
-                                </TouchableOpacity>
-                            ))}
+                <ScrollView
+                    ref={scrollViewRef}
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.scrollContent}
+                    onContentSizeChange={() => {
+                        scrollViewRef.current?.scrollToEnd({ animated: true });
+                    }}
+                >
+                    {isInitialLoading ? (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color={colors.activeTabIcon} />
                         </View>
-                    </View>
-                ) : (
-                    <View style={styles.messagesContainer}>
-                        {messages.map(renderMessage)}
-                        {waitingForResponse && (
-                            <View style={[styles.messageBubble, styles.assistantMessage]}>
-                                <TypingIndicator />
-                            </View>
-                        )}
-                    </View>
-                )}
-            </ScrollView>
+                    ) : messages.length === 0 ? (
+                        <View style={styles.suggestionsContainer}>
+                            <Text style={styles.centerText}>
+                                Start a conversation to capture your memories
+                            </Text>
 
-            <View style={styles.inputContainer}>
-                {imageUri && (
-                    <View style={styles.imagePreviewContainer}>
-                        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                            <View style={styles.promptsContainer}>
+                                {suggestionPrompts.map((prompt, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.promptButton}
+                                        onPress={() => setMessageText(prompt)}
+                                        activeOpacity={0.7}
+                                    >
+                                        <Text style={styles.promptText}>{prompt}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </View>
+                    ) : (
+                        <View style={styles.messagesContainer}>
+                            {messages.map(renderMessage)}
+                            {waitingForResponse && (
+                                <View style={[styles.messageBubble, styles.assistantMessage]}>
+                                    <TypingIndicator />
+                                </View>
+                            )}
+                        </View>
+                    )}
+
+                </ScrollView>
+
+                <View style={styles.inputContainer}>
+                    {imageUri && (
+                        <View style={styles.imagePreviewContainer}>
+                            <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                            <TouchableOpacity
+                                style={styles.removeImageButton}
+                                onPress={() => setImageUri(null)}
+                            >
+                                <Text style={styles.removeImageText}>✕</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                    <View style={styles.inputRow}>
                         <TouchableOpacity
-                            style={styles.removeImageButton}
-                            onPress={() => setImageUri(null)}
+                            style={styles.imageButton}
+                            onPress={selectImageSource}
+                            disabled={isLoading || isUploading}
                         >
-                            <Text style={styles.removeImageText}>✕</Text>
+                            {isUploading ? (
+                                <ActivityIndicator size="small" color="#E5AB47" />
+                            ) : (
+                                <PlusIcon />
+                            )}
+                        </TouchableOpacity>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="How can I help you today?"
+                            placeholderTextColor="#B8B8B8"
+                            value={messageText}
+                            onChangeText={setMessageText}
+                            multiline
+                            editable={!isLoading && !isUploading}
+                        />
+                        <TouchableOpacity
+                            style={[styles.sendButton, (isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
+                            onPress={handleSendMessage}
+                            activeOpacity={0.7}
+                            disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
+                        >
+                            {isLoading || isUploading ? (
+                                <ActivityIndicator size="small" color="#000" />
+                            ) : (
+                                <ArrowRightIcon />
+                            )}
                         </TouchableOpacity>
                     </View>
-                )}
-                <View style={styles.inputRow}>
-                    <TouchableOpacity
-                        style={styles.imageButton}
-                        onPress={selectImageSource}
-                        disabled={isLoading || isUploading}
-                    >
-                        {isUploading ? (
-                            <ActivityIndicator size="small" color="#E5AB47" />
-                        ) : (
-                            <PlusIcon />
-                        )}
-                    </TouchableOpacity>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="How can I help you today?"
-                        placeholderTextColor="#B8B8B8"
-                        value={messageText}
-                        onChangeText={setMessageText}
-                        multiline
-                        editable={!isLoading && !isUploading}
-                    />
-                    <TouchableOpacity
-                        style={[styles.sendButton, (isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
-                        onPress={handleSendMessage}
-                        activeOpacity={0.7}
-                        disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
-                    >
-                        {isLoading || isUploading ? (
-                            <ActivityIndicator size="small" color="#000" />
-                        ) : (
-                            <ArrowRightIcon />
-                        )}
-                    </TouchableOpacity>
                 </View>
-            </View> */}
 
                 <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
-                {/* </SafeAreaView> */}
 
             </LinearGradient>
         </View>
