@@ -558,7 +558,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                             end={{ x: 0.5, y: 1 }}
                             style={styles.inputContainer}
                         >
-                            {imageUri && (
+                            {imageUri && !isUploading && (
                                 <View style={styles.imagePreviewContainer}>
                                     <Image source={{ uri: imageUri }} style={styles.imagePreview} />
                                     <TouchableOpacity
@@ -581,7 +581,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
                             <View style={styles.actionButtons}>
                                 <TouchableOpacity
-                                    style={styles.actionButton}
+                                    style={[styles.actionButton, (isLoading || isUploading) && styles.sendButtonDisabled]}
                                     onPress={openAttachmentSheet}
                                     disabled={isLoading || isUploading}
                                 >
@@ -593,7 +593,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                                     activeOpacity={0.7}
                                     disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
                                 >
-                                    {isLoading || isUploading ? (
+                                    {isLoading ? (
                                         <ActivityIndicator size="small" color="#000" />
                                     ) : (
                                         <ArrowRightIcon width={24} height={24} />
