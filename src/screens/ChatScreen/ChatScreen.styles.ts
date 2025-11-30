@@ -62,7 +62,7 @@ export const ChatStyles = StyleSheet.create({
         elevation: 8,
     },
     inputContainer: {
-        height: 118,
+        minHeight: 118,
         alignContent: 'space-between',
         padding: 15,
         gap: 10,
@@ -189,6 +189,10 @@ export const ChatStyles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 8,
+    },
+    uploadProgressContainer: {
+        marginBottom: 8,
+        alignSelf: 'flex-start',
     },
     removeImageButton: {
         position: 'absolute',

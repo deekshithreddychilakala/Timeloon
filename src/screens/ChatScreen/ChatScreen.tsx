@@ -282,10 +282,13 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
         try {
             const response = await fetch(uri);
-            const blob = await response.blob();
-            const fileExt = uri.split('.').pop();
+            const arrayBuffer = await response.arrayBuffer();
+            const fileExt = uri.split('.').pop() || 'jpg';
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
             const filePath = `${userId}/${fileName}`;
+
+            // Determine content type
+            const contentType = fileExt === 'png' ? 'image/png' : 'image/jpeg';
 
             // Simulate progress (Supabase doesn't provide upload progress callback)
             const progressInterval = setInterval(() => {
@@ -294,9 +297,10 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
             const { data, error } = await supabase.storage
                 .from('message_images')
-                .upload(filePath, blob, {
+                .upload(filePath, arrayBuffer, {
                     cacheControl: '3600',
                     upsert: false,
+                    contentType: contentType,
                 });
 
             clearInterval(progressInterval);
@@ -532,7 +536,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                                 );
                             })}
                             {isUploading && (
-                                <UploadProgress progress={uploadProgress} />
+                                <View style={[styles.messageBubble, styles.userMessage]}>
+                                    <UploadProgress progress={uploadProgress} />
+                                </View>
                             )}
                             {waitingForResponse && (
                                 <View style={[styles.messageBubble, styles.assistantMessage]}>
@@ -552,7 +558,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                             end={{ x: 0.5, y: 1 }}
                             style={styles.inputContainer}
                         >
-                            {/* {imageUri && (
+                            {imageUri && (
                                 <View style={styles.imagePreviewContainer}>
                                     <Image source={{ uri: imageUri }} style={styles.imagePreview} />
                                     <TouchableOpacity
@@ -562,7 +568,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                                         <Text style={styles.removeImageText}>✕</Text>
                                     </TouchableOpacity>
                                 </View>
-                            )} */}
+                            )}
                             <TextInput
                                 style={styles.input}
                                 placeholder="How can I help you today?"
