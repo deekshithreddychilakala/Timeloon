@@ -110,10 +110,10 @@ const PILL_RADIUS = 24;
 const styles = StyleSheet.create({
     // Positions pill above the bottom edge
     wrapper: {
-        position: 'absolute',
-        left: 26,
-        right: 26,
-        bottom: 23, // adjust with SafeArea if necessary
+        // position: 'absolute',
+        // left: 26,
+        // right: 26,
+        // bottom: 23, // adjust with SafeArea if necessary
         alignItems: 'center',
     },
 
