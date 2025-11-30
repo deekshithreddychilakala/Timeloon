@@ -58,7 +58,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 Toast.show({
                     type: 'error',
                     text1: 'Authentication error',
-                    position: 'bottom',
+                    position: 'top',
                 });
             }
         };
@@ -83,7 +83,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 Toast.show({
                     type: 'error',
                     text1: 'Failed to load messages',
-                    position: 'bottom',
+                    position: 'top',
                 });
             } finally {
                 setIsInitialLoading(false);
@@ -153,7 +153,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                     type: 'error',
                     text1: 'Image too large',
                     text2: 'Please select an image smaller than 5MB',
-                    position: 'bottom',
+                    position: 'top',
                     visibilityTime: 3000,
                 });
                 return false;
@@ -174,7 +174,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                     type: 'error',
                     text1: 'Permission denied',
                     text2: 'We need camera permissions to take photos',
-                    position: 'bottom',
+                    position: 'top',
                 });
                 return;
             }
@@ -197,7 +197,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Failed to take photo',
-                position: 'bottom',
+                position: 'top',
             });
         }
     };
@@ -211,7 +211,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                     type: 'error',
                     text1: 'Permission denied',
                     text2: 'We need camera roll permissions',
-                    position: 'bottom',
+                    position: 'top',
                 });
                 return;
             }
@@ -234,7 +234,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Failed to select image',
-                position: 'bottom',
+                position: 'top',
             });
         }
     };
@@ -248,12 +248,12 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                     type: 'info',
                     text1: 'File attachments',
                     text2: `${asset.name} selected. Support coming soon`,
-                    position: 'bottom',
+                    position: 'top',
                 });
             }
         } catch (error) {
             console.error('Error picking file:', error);
-            Toast.show({ type: 'error', text1: 'Failed to select file', position: 'bottom' });
+            Toast.show({ type: 'error', text1: 'Failed to select file', position: 'top' });
         } finally {
             closeAttachmentSheet();
         }
@@ -286,7 +286,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Failed to upload image',
-                position: 'bottom',
+                position: 'top',
             });
             return null;
         } finally {
@@ -385,7 +385,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Failed to send message',
-                position: 'bottom',
+                position: 'top',
             });
             setWaitingForResponse(false);
         } finally {

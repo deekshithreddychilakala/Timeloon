@@ -33,7 +33,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'success',
                 text1: 'Signed out successfully',
-                position: 'bottom',
+                position: 'top',
                 visibilityTime: 2000,
             });
         } catch (error: any) {
@@ -41,7 +41,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
                 type: 'error',
                 text1: 'Error signing out',
                 text2: error.message,
-                position: 'bottom',
+                position: 'top',
                 visibilityTime: 3000,
             });
         }

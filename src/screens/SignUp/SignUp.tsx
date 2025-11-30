@@ -66,10 +66,10 @@ const SignUp: React.FC = () => {
             console.log('signUp response', resp);
             if (resp.error) {
                 console.warn('Sign up error:', resp.error);
-                Toast.show({ type: 'error', text1: 'Sign up failed', text2: resp.error.message || 'Unable to create account' });
+                Toast.show({ type: 'error', text1: 'Sign up failed', text2: resp.error.message || 'Unable to create account', position: 'top' });
             } else {
                 // Show a non-blocking toast for success, then navigate appropriately
-                Toast.show({ type: 'success', text1: 'Sign up successful', text2: 'Your account was created.' });
+                Toast.show({ type: 'success', text1: 'Sign up successful', text2: 'Your account was created.', position: 'top' });
                 const hasSession = !!(resp?.data?.session ?? resp?.data?.user);
                 // Give the toast a moment to be visible before navigation
                 setTimeout(() => {

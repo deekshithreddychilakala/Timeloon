@@ -26,7 +26,7 @@ const ResetPassword: React.FC = () => {
 
     const handleReset = async () => {
         if (!email) {
-            Toast.show({ type: 'error', text1: 'Enter an email', text2: 'Please provide your account email.' });
+            Toast.show({ type: 'error', text1: 'Enter an email', text2: 'Please provide your account email.', position: 'top' });
             return;
         }
         setLoading(true);
@@ -34,15 +34,15 @@ const ResetPassword: React.FC = () => {
             const resp = await sendPasswordReset(email);
             // Many supabase implementations return { data, error }
             if (resp?.error) {
-                Toast.show({ type: 'error', text1: 'Reset failed', text2: resp.error.message || 'Unable to send reset email.' });
+                Toast.show({ type: 'error', text1: 'Reset failed', text2: resp.error.message || 'Unable to send reset email.', position: 'top' });
             } else {
                 // show inline message and toast
                 setSent(true);
-                Toast.show({ type: 'success', text1: 'Reset email sent', text2: 'Check your inbox for a password reset link.' });
+                Toast.show({ type: 'success', text1: 'Reset email sent', text2: 'Check your inbox for a password reset link.', position: 'top' });
             }
         } catch (err: any) {
             console.error('Reset password error', err);
-            Toast.show({ type: 'error', text1: 'Reset failed', text2: err?.message || 'Unable to send reset email.' });
+            Toast.show({ type: 'error', text1: 'Reset failed', text2: err?.message || 'Unable to send reset email.', position: 'top' });
         } finally {
             setLoading(false);
         }
