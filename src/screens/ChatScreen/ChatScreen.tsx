@@ -536,7 +536,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                                 );
                             })}
                             {isUploading && (
-                                <View style={[styles.messageBubble, styles.userMessage]}>
+                                <View style={[styles.messageBubble, styles.userMessage, styles.uploadProgressWrapper]}>
                                     <UploadProgress progress={uploadProgress} />
                                 </View>
                             )}

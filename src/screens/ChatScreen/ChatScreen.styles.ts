@@ -194,6 +194,9 @@ export const ChatStyles = StyleSheet.create({
         marginBottom: 8,
         alignSelf: 'flex-start',
     },
+    uploadProgressWrapper: {
+        backgroundColor: 'transparent',
+    },
     removeImageButton: {
         position: 'absolute',
         top: -8,
