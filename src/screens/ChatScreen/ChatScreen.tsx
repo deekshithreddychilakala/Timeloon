@@ -13,6 +13,7 @@ import colors from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalStyles } from '@/styles/Global.styles';
 import AttachmentSheet from '@/components/AttachmentSheet';
+import UploadProgress from '@/components/UploadProgress';
 
 interface Message {
     id: string;
@@ -51,6 +52,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
     const [userId, setUserId] = useState<string | null>(null);
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
     const [waitingForResponse, setWaitingForResponse] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
@@ -276,6 +278,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         if (!userId) return null;
 
         setIsUploading(true);
+        setUploadProgress(0);
 
         try {
             const response = await fetch(uri);
@@ -284,12 +287,20 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
             const filePath = `${userId}/${fileName}`;
 
+            // Simulate progress (Supabase doesn't provide upload progress callback)
+            const progressInterval = setInterval(() => {
+                setUploadProgress(prev => Math.min(prev + 10, 90));
+            }, 200);
+
             const { data, error } = await supabase.storage
                 .from('message_images')
                 .upload(filePath, blob, {
                     cacheControl: '3600',
                     upsert: false,
                 });
+
+            clearInterval(progressInterval);
+            setUploadProgress(100);
 
             if (error) throw error;
 
@@ -304,6 +315,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             return null;
         } finally {
             setIsUploading(false);
+            setUploadProgress(0);
         }
     };
 
@@ -519,6 +531,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                                     </React.Fragment>
                                 );
                             })}
+                            {isUploading && (
+                                <UploadProgress progress={uploadProgress} />
+                            )}
                             {waitingForResponse && (
                                 <View style={[styles.messageBubble, styles.assistantMessage]}>
                                     <TypingIndicator />
