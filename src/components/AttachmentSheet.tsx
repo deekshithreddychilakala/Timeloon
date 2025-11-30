@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated, Easing, Pressable } from 'react-native';
-import CameraIcon from '@/components/icons/CameraIcon';
-import PhotoLibraryIcon from '@/components/icons/PhotoLibraryIcon';
-import FileIcon from '@/components/icons/FileIcon';
+import CameraIcon from '../../assets/icons/camera.svg';
+import PhotoLibraryIcon from '../../assets/icons/gallery.svg';
+import FileIcon from '../../assets/icons/file.svg';
 import colors from '@/styles/colors';
 import { Fonts } from '@/utils/fonts';
 
@@ -55,17 +55,17 @@ const AttachmentSheet: React.FC<AttachmentSheetProps> = ({ visible, onClose, onC
 
                 <View style={styles.row}>
                     <TouchableOpacity style={styles.option} activeOpacity={0.85} onPress={onCamera}>
-                        <View style={styles.iconWrapper}><CameraIcon size={40} color="#6A6A6A" /></View>
+                        <View style={styles.iconWrapper}><CameraIcon width={32} height={32} /></View>
                         <Text style={styles.optionLabel}>Camera</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.option} activeOpacity={0.85} onPress={onLibrary}>
-                        <View style={styles.iconWrapper}><PhotoLibraryIcon size={40} color="#6A6A6A" /></View>
+                        <View style={styles.iconWrapper}><PhotoLibraryIcon width={32} height={32} /></View>
                         <Text style={styles.optionLabel}>Photo Library</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.option} activeOpacity={0.85} onPress={onFile}>
-                        <View style={styles.iconWrapper}><FileIcon size={40} color="#6A6A6A" /></View>
+                        <View style={styles.iconWrapper}><FileIcon width={32} height={32} /></View>
                         <Text style={styles.optionLabel}>File</Text>
                     </TouchableOpacity>
                 </View>

@@ -45,12 +45,15 @@ export const ChatStyles = StyleSheet.create({
         color: colors.black,
         textAlign: 'left',
     },
+    inputBottomNav: {
+        paddingHorizontal: 27,
+        gap: 24,
+        marginBottom: 23,
+    },
     inputShadowContainer: {
-        marginHorizontal: 20,
-        marginBottom: 100,
         borderRadius: 14,
         // White solid background for efficient shadow rasterization
-        backgroundColor: '#FFFFFF',
+        backgroundColor: colors.white,
         // Shadow matching Figma
         shadowColor: '#FFDFA6',
         shadowOffset: { width: 0, height: -5 },
@@ -59,19 +62,22 @@ export const ChatStyles = StyleSheet.create({
         elevation: 8,
     },
     inputContainer: {
+        height: 118,
+        alignContent: 'space-between',
         padding: 15,
-        gap: 30,
+        gap: 10,
         borderRadius: 14,
         borderWidth: 1,
         borderColor: '#FFDFA6',
         overflow: 'hidden', // Ensure gradient respects border radius
     },
     input: {
-        flex: 1,
+        // flex: 1,
         minHeight: 40,
-        maxHeight: 100,
-        paddingHorizontal: 8,
-        paddingVertical: 8,
+        maxHeight: 40,
+        paddingTop: 0,
+        // maxHeight: 100,
+        paddingHorizontal: 0,
         backgroundColor: 'transparent',
         fontFamily: Fonts.book,
         fontSize: 14,
@@ -79,8 +85,8 @@ export const ChatStyles = StyleSheet.create({
         color: colors.black,
     },
     sendButton: {
-        width: 48,
-        height: 48,
+        width: 39,
+        height: 39,
         backgroundColor: colors.primary,
         borderRadius: 24,
         justifyContent: 'center',
@@ -105,23 +111,53 @@ export const ChatStyles = StyleSheet.create({
     messagesContainer: {
         padding: 27.3,
         paddingTop: 20,
+        gap: 28,
     },
     messageBubble: {
-        maxWidth: '80%',
-        marginBottom: 12,
-        paddingVertical: 10,
-        paddingHorizontal: 14,
-        borderRadius: 16,
+        maxWidth: '86%', // keep responsive, slightly wider
+        // marginBottom: 28,
+    },
+    messageBubbleInner: {
+        paddingVertical: 17,
+        paddingHorizontal: 19,
+        borderRadius: 22,
+        borderWidth: 1,
+        borderColor: '#FFDFA6',
+        gap: 8,
+    },
+
+    messageTimestamp: {
+        alignSelf: 'flex-end',
+        marginTop: 6,
+        fontSize: 11,
+        lineHeight: 14,
+        color: 'rgba(0,0,0,0.45)',
+    },
+
+    messageBubbleShadowWrapper: {
+        backgroundColor: '#ffffff',
+        borderRadius: 22,
+        // iOS shadow
+        shadowColor: '#000',
+        shadowOpacity: 0.06,
+        shadowRadius: 24,
+        shadowOffset: { width: 0, height: 8 },
+        // Android elevation
+        elevation: 8,
+        overflow: 'visible',
+    },
+    messageBubbleClip: {
+        borderRadius: 22,
+        overflow: 'hidden',
+    },
+    messageBubbleGradient: {
+        borderRadius: 22,
     },
     userMessage: {
         alignSelf: 'flex-end',
-        backgroundColor: colors.primary,
-        borderBottomRightRadius: 4,
     },
     assistantMessage: {
         alignSelf: 'flex-start',
-        backgroundColor: colors.surface,
-        borderBottomLeftRadius: 4,
     },
     messageText: {
         fontFamily: Fonts.book,
@@ -172,34 +208,40 @@ export const ChatStyles = StyleSheet.create({
     },
     inputRow: {
         flexDirection: 'column',
+        justifyContent: 'space-between',
         gap: 10,
         backgroundColor: 'transparent',
     },
-    inputField: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: colors.white,
-        borderWidth: 1,
-        borderColor: '#FFDFA6',
-        borderRadius: 28,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        gap: 8,
-    },
     actionButtons: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        gap: 12,
+        justifyContent: 'space-between'
     },
     actionButton: {
-        width: 48,
-        height: 48,
+        width: 39,
+        height: 39,
         borderRadius: 24,
         borderWidth: 1,
         borderColor: '#FFDFA6',
         backgroundColor: colors.white,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+
+    dateSeparatorContainer: {
+        alignSelf: 'center',
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 12,
+        backgroundColor: colors.white,
+        borderWidth: 1,
+        borderColor: colors.black12,
+        marginBottom: 12,
+    },
+    dateSeparatorText: {
+        fontFamily: Fonts.medium,
+        fontSize: 12,
+        letterSpacing: -0.1,
+        color: colors.black03,
     },
     imageButton: {
         width: 32,

@@ -24,6 +24,21 @@ interface Message {
     image_path?: string;
 }
 
+function formatTimestamp(ts?: string | number | Date | null): string {
+    try {
+        const d = ts ? new Date(ts as any) : new Date();
+        let hours = d.getHours();
+        const minutes = d.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        if (hours === 0) hours = 12;
+        const mm = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        return `${hours}:${mm} ${ampm}`;
+    } catch {
+        return '';
+    }
+}
+
 interface ChatScreenProps {
     onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
 }
@@ -109,12 +124,10 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         const newMessage = payload.new as Message;
                         setMessages(prev => [...prev, newMessage]);
 
-                        // If assistant message received, stop waiting
                         if (newMessage.role === 'assistant') {
                             setWaitingForResponse(false);
                         }
 
-                        // Auto scroll to bottom on new message
                         setTimeout(() => {
                             scrollViewRef.current?.scrollToEnd({ animated: true });
                         }, 100);
@@ -397,30 +410,47 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         const isUserMessage = message.role === 'user';
         const imageUrl = message.image_path ? imageUrls[message.image_path] : null;
 
+        const userColors = [
+            'rgba(255,255,255,0.90)',
+            'rgba(255,233,197,0.85)',
+            'rgba(255,223,166,0.77)'
+        ];
+        const assistantColors = [
+            'rgba(255,223,166,0.28)',
+            'rgba(255,223,166,0.14)',
+            'rgba(255,223,166,0.34)'
+        ];
+
+        const gradientProps = isUserMessage
+            ? { colors: userColors, start: { x: 0.5, y: 0 }, end: { x: 0.5, y: 1 } }
+            : { colors: assistantColors, start: { x: 0, y: 0.5 }, end: { x: 1, y: 0.5 } };
+
+        const timestamp = formatTimestamp((message as any).createdAt || (message as any).created_at || (message as any).timestamp || null);
         return (
-            <View
-                key={message.id}
-                style={[
-                    styles.messageBubble,
-                    isUserMessage ? styles.userMessage : styles.assistantMessage
-                ]}
-            >
-                {message.type === 'image' && imageUrl && (
-                    <Image
-                        source={{ uri: imageUrl }}
-                        style={styles.messageImage}
-                        resizeMode="cover"
-                    />
-                )}
-                {message.content ? (
-                    <Text style={[
-                        styles.messageText,
-                        isUserMessage ? styles.userMessageText : styles.assistantMessageText,
-                        (message.type === 'image' && imageUrl) ? styles.messageTextWithImage : null
-                    ]}>
-                        {message.content}
-                    </Text>
-                ) : null}
+            <View key={message.id} style={[styles.messageBubbleShadowWrapper, styles.messageBubble, isUserMessage ? styles.userMessage : styles.assistantMessage]}>
+                <View style={styles.messageBubbleClip}>
+                    <LinearGradient {...gradientProps} style={styles.messageBubbleGradient}>
+                        <View style={styles.messageBubbleInner}>
+                            {message.type === 'image' && imageUrl && (
+                                <Image source={{ uri: imageUrl }} style={styles.messageImage} resizeMode="cover" />
+                            )}
+                            {message.content ? (
+                                <Text
+                                    style={[
+                                        styles.messageText,
+                                        isUserMessage ? styles.userMessageText : styles.assistantMessageText,
+                                        (message.type === 'image' && imageUrl) ? styles.messageTextWithImage : null,
+                                    ]}
+                                >
+                                    {message.content}
+                                </Text>
+                            ) : null}
+                            {timestamp ? (
+                                <Text style={styles.messageTimestamp}>{timestamp}</Text>
+                            ) : null}
+                        </View>
+                    </LinearGradient>
+                </View>
             </View>
         );
     };
@@ -470,7 +500,25 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         </View>
                     ) : (
                         <View style={styles.messagesContainer}>
-                            {messages.map(renderMessage)}
+                            {messages.map((message, idx) => {
+                                const prev = messages[idx - 1];
+                                const currDate = new Date(message.created_at);
+                                const prevDate = prev ? new Date(prev.created_at) : null;
+                                const changedDay = !prevDate || currDate.toDateString() !== prevDate.toDateString();
+
+                                const dateLabel = `${currDate.toLocaleString('default', { month: 'long' })} ${currDate.getDate()}, ${currDate.getFullYear()}`;
+
+                                return (
+                                    <React.Fragment key={message.id}>
+                                        {changedDay ? (
+                                            <View style={styles.dateSeparatorContainer}>
+                                                <Text style={styles.dateSeparatorText}>{dateLabel}</Text>
+                                            </View>
+                                        ) : null}
+                                        {renderMessage(message)}
+                                    </React.Fragment>
+                                );
+                            })}
                             {waitingForResponse && (
                                 <View style={[styles.messageBubble, styles.assistantMessage]}>
                                     <TypingIndicator />

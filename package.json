@@ -31,7 +31,8 @@
     "react-native-toast-message": "^2.3.3",
     "react-native-url-polyfill": "^3.0.0",
     "zustand": "^4.4.0",
-    "expo-blur": "~12.4.1"
+    "expo-blur": "~12.4.1",
+    "expo-document-picker": "~11.5.4"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
