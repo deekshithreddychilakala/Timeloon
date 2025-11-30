@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Image, ActionSheetIOS, Platform, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
 import { ChatStyles as styles } from './ChatScreen.styles';
 import BottomTabNav from '@/components/BottomTabNav';
 import { supabase } from '@/services/supabase/client';
 import Toast from 'react-native-toast-message';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import TypingIndicator from '@/components/TypingIndicator';
 import PlusIcon from '../../../assets/icons/plus.svg';
 import ArrowRightIcon from '../../../assets/icons/arrow_right.svg';
 import colors from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalStyles } from '@/styles/Global.styles';
+import AttachmentSheet from '@/components/AttachmentSheet';
 
 interface Message {
     id: string;
@@ -136,34 +138,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         };
     }, []);
 
-    const selectImageSource = () => {
-        if (Platform.OS === 'ios') {
-            ActionSheetIOS.showActionSheetWithOptions(
-                {
-                    options: ['Cancel', 'Take Photo', 'Choose from Library'],
-                    cancelButtonIndex: 0,
-                },
-                (buttonIndex) => {
-                    if (buttonIndex === 1) {
-                        pickImageFromCamera();
-                    } else if (buttonIndex === 2) {
-                        pickImageFromLibrary();
-                    }
-                }
-            );
-        } else {
-            Alert.alert(
-                'Select Image',
-                'Choose an option',
-                [
-                    { text: 'Cancel', style: 'cancel' },
-                    { text: 'Take Photo', onPress: pickImageFromCamera },
-                    { text: 'Choose from Library', onPress: pickImageFromLibrary },
-                ],
-                { cancelable: true }
-            );
-        }
-    };
+    const [attachmentVisible, setAttachmentVisible] = useState(false);
+    const openAttachmentSheet = () => setAttachmentVisible(true);
+    const closeAttachmentSheet = () => setAttachmentVisible(false);
 
     const validateImageSize = async (uri: string): Promise<boolean> => {
         try {
@@ -212,6 +189,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 const isValid = await validateImageSize(result.assets[0].uri);
                 if (isValid) {
                     setImageUri(result.assets[0].uri);
+                    closeAttachmentSheet();
                 }
             }
         } catch (error) {
@@ -248,6 +226,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 const isValid = await validateImageSize(result.assets[0].uri);
                 if (isValid) {
                     setImageUri(result.assets[0].uri);
+                    closeAttachmentSheet();
                 }
             }
         } catch (error) {
@@ -257,6 +236,26 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 text1: 'Failed to select image',
                 position: 'bottom',
             });
+        }
+    };
+
+    const pickDocument = async () => {
+        try {
+            const result = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true, multiple: false });
+            if (!result.canceled && result.assets && result.assets.length > 0) {
+                const asset = result.assets[0];
+                Toast.show({
+                    type: 'info',
+                    text1: 'File attachments',
+                    text2: `${asset.name} selected. Support coming soon`,
+                    position: 'bottom',
+                });
+            }
+        } catch (error) {
+            console.error('Error picking file:', error);
+            Toast.show({ type: 'error', text1: 'Failed to select file', position: 'bottom' });
+        } finally {
+            closeAttachmentSheet();
         }
     };
 
@@ -482,51 +481,39 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
                 </ScrollView>
 
-                <View style={styles.inputShadowContainer}>
-                    <LinearGradient
-                        colors={['#FFF7EA', '#FFF']}
-                        start={{ x: 0.5, y: 0 }}
-                        end={{ x: 0.5, y: 1 }}
-                        style={styles.inputContainer}
-                    >
-                        {imageUri && (
-                            <View style={styles.imagePreviewContainer}>
-                                <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-                                <TouchableOpacity
-                                    style={styles.removeImageButton}
-                                    onPress={() => setImageUri(null)}
-                                >
-                                    <Text style={styles.removeImageText}>✕</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                        <View style={styles.inputRow}>
-                            <View style={styles.inputField}>
-                                <TouchableOpacity
-                                    style={styles.imageButton}
-                                    onPress={selectImageSource}
-                                    disabled={isLoading || isUploading}
-                                >
-                                    {isUploading ? (
-                                        <ActivityIndicator size="small" color="#E5AB47" />
-                                    ) : (
-                                        <PlusIcon width={20} height={20} />
-                                    )}
-                                </TouchableOpacity>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="How can I help you today?"
-                                    placeholderTextColor="#B8B8B8"
-                                    value={messageText}
-                                    onChangeText={setMessageText}
-                                    multiline
-                                    editable={!isLoading && !isUploading}
-                                />
-                            </View>
+                <View style={styles.inputBottomNav}>
+                    <View style={styles.inputShadowContainer}>
+                        <LinearGradient
+                            colors={['#FFF7EA', '#FFF']}
+                            start={{ x: 0.5, y: 0 }}
+                            end={{ x: 0.5, y: 1 }}
+                            style={styles.inputContainer}
+                        >
+                            {/* {imageUri && (
+                                <View style={styles.imagePreviewContainer}>
+                                    <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                                    <TouchableOpacity
+                                        style={styles.removeImageButton}
+                                        onPress={() => setImageUri(null)}
+                                    >
+                                        <Text style={styles.removeImageText}>✕</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )} */}
+                            <TextInput
+                                style={styles.input}
+                                placeholder="How can I help you today?"
+                                placeholderTextColor="#B8B8B8"
+                                value={messageText}
+                                onChangeText={setMessageText}
+                                multiline
+                                editable={!isLoading && !isUploading}
+                            />
+
                             <View style={styles.actionButtons}>
                                 <TouchableOpacity
                                     style={styles.actionButton}
-                                    onPress={selectImageSource}
+                                    onPress={openAttachmentSheet}
                                     disabled={isLoading || isUploading}
                                 >
                                     <PlusIcon width={24} height={24} />
@@ -544,10 +531,19 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                                     )}
                                 </TouchableOpacity>
                             </View>
-                        </View>
-                    </LinearGradient>
+                        </LinearGradient>
+                    </View>
+
+                    <AttachmentSheet
+                        visible={attachmentVisible}
+                        onClose={closeAttachmentSheet}
+                        onCamera={pickImageFromCamera}
+                        onLibrary={pickImageFromLibrary}
+                        onFile={pickDocument}
+                    />
+
+                    <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
                 </View>
-                <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
             </LinearGradient>
         </View>
     );
