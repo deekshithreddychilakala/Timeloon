@@ -19,6 +19,7 @@
     "@types/react": "~18.2.14",
     "expo": "^49.0.0",
     "expo-constants": "~14.4.2",
+    "expo-image-picker": "~14.3.2",
     "expo-linear-gradient": "~12.3.0",
     "react": "18.2.0",
     "react-native": "0.72.10",
@@ -29,7 +30,8 @@
     "react-native-svg-transformer": "^1.5.2",
     "react-native-toast-message": "^2.3.3",
     "react-native-url-polyfill": "^3.0.0",
-    "zustand": "^4.4.0"
+    "zustand": "^4.4.0",
+    "expo-blur": "~12.4.1"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
