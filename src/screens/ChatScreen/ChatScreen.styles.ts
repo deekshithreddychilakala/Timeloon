@@ -175,10 +175,6 @@ export const ChatStyles = StyleSheet.create({
         width: 200,
         height: 200,
         borderRadius: 12,
-        marginBottom: 8,
-    },
-    messageTextWithImage: {
-        marginTop: 4,
     },
     imagePreviewContainer: {
         position: 'relative',

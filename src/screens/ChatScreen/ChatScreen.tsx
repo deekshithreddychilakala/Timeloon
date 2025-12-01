@@ -451,20 +451,19 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 <View style={styles.messageBubbleClip}>
                     <LinearGradient {...gradientProps} style={styles.messageBubbleGradient}>
                         <View style={styles.messageBubbleInner}>
-                            {message.type === 'image' && imageUrl && (
-                                <Image source={{ uri: imageUrl }} style={styles.messageImage} resizeMode="cover" />
-                            )}
                             {message.content ? (
                                 <Text
                                     style={[
                                         styles.messageText,
                                         isUserMessage ? styles.userMessageText : styles.assistantMessageText,
-                                        (message.type === 'image' && imageUrl) ? styles.messageTextWithImage : null,
                                     ]}
                                 >
                                     {message.content}
                                 </Text>
                             ) : null}
+                            {message.type === 'image' && imageUrl && (
+                                <Image source={{ uri: imageUrl }} style={styles.messageImage} resizeMode="cover" />
+                            )}
                             {timestamp ? (
                                 <Text style={styles.messageTimestamp}>{timestamp}</Text>
                             ) : null}
