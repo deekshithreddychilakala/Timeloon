@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CameraGoldIcon from '../../assets/icons/camera_gold.svg';
-import RetryIcon from '../../assets/icons/retry_icon.svg';
+import RetryIcon from '../../assets/icons/retry_logo.svg';
 import { Fonts } from '@/utils/fonts';
 
 export type UploadFailedProps = {
