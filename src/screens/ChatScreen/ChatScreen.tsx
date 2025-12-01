@@ -14,6 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalStyles } from '@/styles/Global.styles';
 import AttachmentSheet from '@/components/AttachmentSheet';
 import UploadProgress from '@/components/UploadProgress';
+import UploadFailed from '@/components/UploadFailed';
 
 interface Message {
     id: string;
@@ -53,6 +54,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadFailed, setUploadFailed] = useState(false);
     const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
     const [waitingForResponse, setWaitingForResponse] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
@@ -311,16 +313,17 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             return data.path;
         } catch (error) {
             console.error('Error uploading image:', error);
-            Toast.show({
-                type: 'error',
-                text1: 'Failed to upload image',
-                position: 'top',
-            });
+            setUploadFailed(true);
             return null;
         } finally {
             setIsUploading(false);
             setUploadProgress(0);
         }
+    };
+
+    const handleRetryUpload = () => {
+        setUploadFailed(false);
+        handleSendMessage();
     };
 
     const getSignedUrl = async (path: string): Promise<string> => {
@@ -403,6 +406,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
             setMessageText('');
             setImageUri(null);
+            setUploadFailed(false);
             setWaitingForResponse(true);
 
             // Scroll to bottom after sending
@@ -538,6 +542,11 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                             {isUploading && (
                                 <View style={[styles.messageBubble, styles.userMessage, styles.uploadProgressWrapper]}>
                                     <UploadProgress progress={uploadProgress} />
+                                </View>
+                            )}
+                            {uploadFailed && (
+                                <View style={[styles.messageBubble, styles.userMessage, styles.uploadProgressWrapper]}>
+                                    <UploadFailed onRetry={handleRetryUpload} />
                                 </View>
                             )}
                             {waitingForResponse && (
