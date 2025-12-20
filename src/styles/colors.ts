@@ -38,6 +38,34 @@ export const colors = {
     yellow01: '#FFDFA6',
     activeTabIcon: '#E5AB47',
 
+    // Additional UI colors
+    gray01: '#E1E1E1',
+    gray02: '#F6F6F6',
+    gray03: '#545050',
+    gray04: '#ADADAD',
+    timestampColor: 'rgba(0,0,0,0.45)',
+
+    // Tab nav specific colors
+    tabNavGlassBorder: 'rgba(255,255,255,0.25)',
+    tabNavGlassBackground: 'rgba(255,255,255,0.04)',
+    tabNavInnerBorder: 'rgba(255,255,255,0.5)',
+    tabNavGradient: ['rgba(255,255,255,0.25)', 'rgba(255,255,255,0.08)'],
+
+    // Primary button colors
+    buttonBackground: '#252525',
+    buttonText: '#FFFFFF',
+    buttonGradient: ['rgba(255,255,255,0.3)', 'rgba(255,255,255,0.0)'],
+
+    // Message bubble gradients
+    messageBubbleUserColors: ['rgba(255,255,255,0.90)', 'rgba(255,233,197,0.85)', 'rgba(255,223,166,0.77)'],
+    messageBubbleAssistantColors: ['rgba(255,223,166,0.28)', 'rgba(255,223,166,0.14)', 'rgba(255,223,166,0.34)'],
+
+    // Input gradient
+    inputGradientColors: ['#FFF7EA', '#FFF'],
+
+    // Upload component gradient
+    uploadLogoGradient: ['rgba(255, 223, 166, 0.30)', 'rgba(255, 223, 166, 0.15)'],
+
     // Gradient used on LandingScreen (matches Figma values)
     landingScreenBG_Gradient: {
         // angle: 195deg approximately mapped to start/end points

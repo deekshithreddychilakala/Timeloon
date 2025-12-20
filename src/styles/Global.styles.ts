@@ -29,5 +29,10 @@ export const GlobalStyles = StyleSheet.create({
         fontSize: 13,
         letterSpacing: -0.13,
         color: colors.black10,
+    },
+    BottomNavContainer: {
+        paddingHorizontal: 27,
+        gap: 24,
+        marginBottom: 23,
     }
 });

@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import CameraGoldIcon from '../../assets/icons/camera_gold.svg';
 import RetryIcon from '../../assets/icons/retry_logo.svg';
 import { Fonts } from '@/utils/fonts';
+import colors from '@/styles/colors';
 
 export type UploadFailedProps = {
     onRetry: () => void;
@@ -13,7 +14,7 @@ const UploadFailed: React.FC<UploadFailedProps> = ({ onRetry }) => {
     return (
         <View style={styles.container}>
             <LinearGradient
-                colors={['rgba(255, 223, 166, 0.30)', 'rgba(255, 223, 166, 0.15)']}
+                colors={colors.uploadLogoGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.logoContainer}
@@ -43,9 +44,9 @@ const styles = StyleSheet.create({
         gap: 14,
         borderRadius: 22,
         borderWidth: 1,
-        borderColor: '#FFDFA6',
-        backgroundColor: '#FFFFFF',
-        shadowColor: '#000',
+        borderColor: colors.yellow01,
+        backgroundColor: colors.white,
+        shadowColor: colors.black,
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.04,
         shadowRadius: 18,
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     title: {
-        color: '#1C1C1E',
+        color: colors.black03,
         fontFamily: Fonts.medium,
         fontSize: 13,
         fontWeight: '500',
@@ -81,11 +82,11 @@ const styles = StyleSheet.create({
         gap: 8,
         borderRadius: 4,
         borderWidth: 0.5,
-        borderColor: '#545050',
-        backgroundColor: '#F6F6F6',
+        borderColor: colors.gray03,
+        backgroundColor: colors.gray02,
     },
     retryText: {
-        color: '#1C1C1E',
+        color: colors.black03,
         fontFamily: Fonts.medium,
         fontSize: 12,
         fontWeight: '500',

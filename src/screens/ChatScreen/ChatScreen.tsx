@@ -430,20 +430,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         const isUserMessage = message.role === 'user';
         const imageUrl = message.image_path ? imageUrls[message.image_path] : null;
 
-        const userColors = [
-            'rgba(255,255,255,0.90)',
-            'rgba(255,233,197,0.85)',
-            'rgba(255,223,166,0.77)'
-        ];
-        const assistantColors = [
-            'rgba(255,223,166,0.28)',
-            'rgba(255,223,166,0.14)',
-            'rgba(255,223,166,0.34)'
-        ];
-
         const gradientProps = isUserMessage
-            ? { colors: userColors, start: { x: 0.5, y: 0 }, end: { x: 0.5, y: 1 } }
-            : { colors: assistantColors, start: { x: 0, y: 0.5 }, end: { x: 1, y: 0.5 } };
+            ? { colors: colors.messageBubbleUserColors, start: { x: 0.5, y: 0 }, end: { x: 0.5, y: 1 } }
+            : { colors: colors.messageBubbleAssistantColors, start: { x: 0, y: 0.5 }, end: { x: 1, y: 0.5 } };
 
         const timestamp = formatTimestamp((message as any).createdAt || (message as any).created_at || (message as any).timestamp || null);
         return (
@@ -558,10 +547,10 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
                 </ScrollView>
 
-                <View style={styles.inputBottomNav}>
+                <View style={GlobalStyles.BottomNavContainer}>
                     <View style={styles.inputShadowContainer}>
                         <LinearGradient
-                            colors={['#FFF7EA', '#FFF']}
+                            colors={colors.inputGradientColors}
                             start={{ x: 0.5, y: 0 }}
                             end={{ x: 0.5, y: 1 }}
                             style={styles.inputContainer}

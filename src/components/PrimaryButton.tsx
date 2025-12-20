@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Fonts } from '@/utils/fonts';
+import colors from '@/styles/colors';
 
 type Props = {
     title: string;
@@ -30,10 +31,7 @@ const PrimaryButton: React.FC<Props> = ({ title, onPress, style, textStyle, disa
                 We approximate by using a LinearGradient overlay and a dark base color.
             */}
             <LinearGradient
-                colors={[
-                    'rgba(255,255,255,0.3)',
-                    'rgba(255,255,255,0.0)',
-                ]}
+                colors={colors.buttonGradient}
                 locations={[0, 0.5]}
                 start={{ x: 0.5, y: 0 }}
                 end={{ x: 0.5, y: 1 }}
@@ -46,7 +44,7 @@ const PrimaryButton: React.FC<Props> = ({ title, onPress, style, textStyle, disa
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#252525',
+        backgroundColor: colors.buttonBackground,
         paddingVertical: 14,
         paddingHorizontal: 28,
         borderRadius: 12,
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
         borderRadius: 12
     },
     text: {
-        color: '#fff',
+        color: colors.buttonText,
         fontSize: 17,
         fontWeight: '600',
         fontFamily: Fonts.medium,

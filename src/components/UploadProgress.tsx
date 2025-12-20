@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CameraGoldIcon from '../../assets/icons/camera_gold.svg';
 import { Fonts } from '@/utils/fonts';
+import colors from '@/styles/colors';
 
 export type UploadProgressProps = {
     progress: number; // 0-100
@@ -12,7 +13,7 @@ const UploadProgress: React.FC<UploadProgressProps> = ({ progress }) => {
     return (
         <View style={styles.container}>
             <LinearGradient
-                colors={['rgba(255, 223, 166, 0.30)', 'rgba(255, 223, 166, 0.15)']}
+                colors={colors.uploadLogoGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.logoContainer}
@@ -44,9 +45,9 @@ const styles = StyleSheet.create({
         gap: 14,
         borderRadius: 22,
         borderWidth: 1,
-        borderColor: '#FFDFA6',
-        backgroundColor: '#FFFFFF',
-        shadowColor: '#000',
+        borderColor: colors.yellow01,
+        backgroundColor: colors.white,
+        shadowColor: colors.black,
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.04,
         shadowRadius: 18,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
         gap: 6,
     },
     title: {
-        color: '#1C1C1E',
+        color: colors.black03,
         fontFamily: Fonts.medium,
         fontSize: 13,
         fontWeight: '500',
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     percentText: {
-        color: '#1C1C1E',
+        color: colors.black03,
         fontFamily: Fonts.medium,
         fontSize: 10,
         fontWeight: '500',
@@ -88,13 +89,13 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 6,
         borderRadius: 30,
-        backgroundColor: '#E1E1E1',
+        backgroundColor: colors.gray01,
         overflow: 'hidden',
     },
     progressBarFill: {
         height: '100%',
         borderRadius: 30,
-        backgroundColor: '#E5AB47',
+        backgroundColor: colors.activeTabIcon,
     },
 });
 

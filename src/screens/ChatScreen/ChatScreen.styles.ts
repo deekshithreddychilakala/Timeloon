@@ -45,17 +45,12 @@ export const ChatStyles = StyleSheet.create({
         color: colors.black,
         textAlign: 'left',
     },
-    inputBottomNav: {
-        paddingHorizontal: 27,
-        gap: 24,
-        marginBottom: 23,
-    },
     inputShadowContainer: {
         borderRadius: 14,
         // White solid background for efficient shadow rasterization
         backgroundColor: colors.white,
         // Shadow matching Figma
-        shadowColor: '#FFDFA6',
+        shadowColor: colors.yellow01,
         shadowOffset: { width: 0, height: -5 },
         shadowOpacity: 0.34,
         shadowRadius: 11,
@@ -68,7 +63,7 @@ export const ChatStyles = StyleSheet.create({
         gap: 10,
         borderRadius: 14,
         borderWidth: 1,
-        borderColor: '#FFDFA6',
+        borderColor: colors.yellow01,
         overflow: 'hidden', // Ensure gradient respects border radius
     },
     input: {
@@ -122,7 +117,7 @@ export const ChatStyles = StyleSheet.create({
         paddingHorizontal: 19,
         borderRadius: 22,
         borderWidth: 1,
-        borderColor: '#FFDFA6',
+        borderColor: colors.yellow01,
         gap: 8,
     },
 
@@ -131,14 +126,14 @@ export const ChatStyles = StyleSheet.create({
         marginTop: 6,
         fontSize: 11,
         lineHeight: 14,
-        color: 'rgba(0,0,0,0.45)',
+        color: colors.timestampColor,
     },
 
     messageBubbleShadowWrapper: {
-        backgroundColor: '#ffffff',
+        backgroundColor: colors.white,
         borderRadius: 22,
         // iOS shadow
-        shadowColor: '#000',
+        shadowColor: colors.black,
         shadowOpacity: 0.06,
         shadowRadius: 24,
         shadowOffset: { width: 0, height: 8 },
@@ -224,7 +219,7 @@ export const ChatStyles = StyleSheet.create({
         height: 39,
         borderRadius: 24,
         borderWidth: 1,
-        borderColor: '#FFDFA6',
+        borderColor: colors.yellow01,
         backgroundColor: colors.white,
         justifyContent: 'center',
         alignItems: 'center',

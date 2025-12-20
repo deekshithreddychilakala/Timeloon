@@ -59,7 +59,7 @@ const BottomTabNav: React.FC<BottomTabNavProps> = ({
 
                     {/* Light vertical gradient & content */}
                     <LinearGradient
-                        colors={['rgba(255,255,255,0.25)', 'rgba(255,255,255,0.08)']}
+                        colors={colors.tabNavGradient}
                         start={{ x: 0.5, y: 0 }}
                         end={{ x: 0.5, y: 1 }}
                         style={styles.card}
@@ -122,9 +122,9 @@ const styles = StyleSheet.create({
         width: '100%',
         borderRadius: PILL_RADIUS,
         // Solid (non-transparent) background to allow efficient shadow rasterization
-        backgroundColor: '#FFFFFF',
+        backgroundColor: colors.white,
         // iOS shadow
-        shadowColor: '#000',
+        shadowColor: colors.black,
         shadowOpacity: 0.12,
         shadowRadius: 28,
         shadowOffset: { width: 0, height: 12 },
@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
         borderRadius: PILL_RADIUS,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.25)',
-        backgroundColor: 'rgba(255,255,255,0.04)',
+        borderColor: colors.tabNavGlassBorder,
+        backgroundColor: colors.tabNavGlassBackground,
     },
 
     // Content pill
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         borderRadius: PILL_RADIUS,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.5)',
+        borderColor: colors.tabNavInnerBorder,
     },
 
     row: {

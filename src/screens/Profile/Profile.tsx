@@ -4,6 +4,9 @@ import { ProfileStyles as styles } from './Profile.styles';
 import BottomTabNav from '@/components/BottomTabNav';
 import { supabase } from '@/services/supabase/client';
 import Toast from 'react-native-toast-message';
+import { LinearGradient } from 'expo-linear-gradient';
+import colors from '@/styles/colors';
+import { GlobalStyles } from '@/styles/Global.styles';
 
 interface ProfileScreenProps {
     onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
@@ -49,47 +52,55 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Profile</Text>
-                <Text style={styles.subtitle}>Manage your account</Text>
-            </View>
+            <LinearGradient
+                colors={colors.commonScreensBGConfig.colors}
+                start={colors.commonScreensBGConfig.start}
+                end={colors.commonScreensBGConfig.end}
+                style={colors.mainScreensBGElement}>
+                <View style={GlobalStyles.mainScreenTitleDescContainer}>
+                    <Text style={GlobalStyles.mainScreenTitle}>Profile</Text>
+                    <Text style={GlobalStyles.mainScreenDescription}>Manage your account</Text>
+                </View>
 
-            <ScrollView
-                style={{ flex: 1 }}
-                contentContainerStyle={styles.scrollContent}
-            >
-                <View style={styles.content}>
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Account Information</Text>
+                <ScrollView
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.scrollContent}
+                >
+                    <View style={styles.content}>
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>Account Information</Text>
 
-                        {userName ? (
+                            {userName ? (
+                                <View style={styles.infoRow}>
+                                    <Text style={styles.infoLabel}>Name</Text>
+                                    <Text style={styles.infoValue}>{userName}</Text>
+                                </View>
+                            ) : null}
+
                             <View style={styles.infoRow}>
-                                <Text style={styles.infoLabel}>Name</Text>
-                                <Text style={styles.infoValue}>{userName}</Text>
+                                <Text style={styles.infoLabel}>Email</Text>
+                                <Text style={styles.infoValue}>{userEmail || 'Not available'}</Text>
                             </View>
-                        ) : null}
+                        </View>
 
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoLabel}>Email</Text>
-                            <Text style={styles.infoValue}>{userEmail || 'Not available'}</Text>
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>Actions</Text>
+
+                            <TouchableOpacity
+                                style={styles.signOutButton}
+                                onPress={handleSignOut}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={styles.signOutButtonText}>Sign Out</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Actions</Text>
-
-                        <TouchableOpacity
-                            style={styles.signOutButton}
-                            onPress={handleSignOut}
-                            activeOpacity={0.7}
-                        >
-                            <Text style={styles.signOutButtonText}>Sign Out</Text>
-                        </TouchableOpacity>
-                    </View>
+                </ScrollView>
+                <View style={GlobalStyles.BottomNavContainer}>
+                    <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />
                 </View>
-            </ScrollView>
+            </LinearGradient>
 
-            <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />
         </View>
     );
 };
