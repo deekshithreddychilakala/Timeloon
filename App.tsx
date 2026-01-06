@@ -27,6 +27,9 @@ export default function App() {
     AvenirMedium: require('./assets/fonts/Avenir-Medium.ttf'),
     AvenirHeavy: require('./assets/fonts/Avenir-Heavy.ttf'),
     AvenirBlack: require('./assets/fonts/Avenir-Black.ttf'),
+    SFProTextRegular: require('./assets/fonts/SF-Pro-Text-Regular.ttf'),
+    SFProTextSemibold: require('./assets/fonts/SF-Pro-Text-Semibold.ttf'),
+    SFProTextBold: require('./assets/fonts/SF-Pro-Text-Bold.ttf'),
   });
 
   // null = checking, true = signed in, false = signed out

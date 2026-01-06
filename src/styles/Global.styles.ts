@@ -14,9 +14,9 @@ export const GlobalStyles = StyleSheet.create({
         paddingHorizontal: 27,
         gap: 4,
         flexDirection: 'column',
-        backgroundColor: colors.black09,
+        backgroundColor: colors.titleContainerBg,
         borderBottomWidth: 1,
-        borderBottomColor: colors.yellow01,
+        borderBottomColor: colors.purple01,
     },
     mainScreenTitle: {
         fontFamily: Fonts.heavy,

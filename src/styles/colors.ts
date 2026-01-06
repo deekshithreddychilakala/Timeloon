@@ -37,6 +37,8 @@ export const colors = {
 
     yellow01: '#FFDFA6',
     activeTabIcon: '#E5AB47',
+    purple01: '#A475EF',
+    titleContainerBg: 'rgba(255, 255, 255, 0.95)',
 
     // Additional UI colors
     gray01: '#E1E1E1',

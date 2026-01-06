@@ -5,11 +5,11 @@ import { Fonts } from '@/utils/fonts';
 import colors from '@/styles/colors';
 
 import MemoryTreeIcon from '../../assets/icons/memory_tree.svg';
-import MemoryTreeIconGold from '../../assets/icons/memory_tree_gold.svg';
+import MemoryTreeIconGold from '../../assets/icons/memory_tree_active.svg';
 import ChatIcon from '../../assets/icons/ai_chat.svg';
-import ChatIconGold from '../../assets/icons/ai_chat_gold.svg';
+import ChatIconGold from '../../assets/icons/ai_chat_active.svg';
 import ProfileIcon from '../../assets/icons/profile.svg';
-import ProfileIconGold from '../../assets/icons/profile_gold.svg';
+import ProfileIconGold from '../../assets/icons/profile_active.svg';
 import { BlurView } from 'expo-blur';
 
 type TabItem = 'MemoryTree' | 'Chat' | 'Profile';

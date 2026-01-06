@@ -4,4 +4,7 @@ export const Fonts = {
     medium: 'AvenirMedium',
     heavy: 'AvenirHeavy',
     black: 'AvenirBlack',
+    sfProTextRegular: 'SFProTextRegular',
+    sfProTextSemibold: 'SFProTextSemibold',
+    sfProTextBold: 'SFProTextBold',
 };
