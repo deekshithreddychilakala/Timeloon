@@ -70,12 +70,14 @@ export async function signIn(email: string, password: string) {
  * Returns the full Supabase response so callers can inspect `data` and `error`.
  */
 export async function signUp(email: string, password: string, metadata?: Record<string, any>) {
-    // Supabase JS client typings vary between versions. Use an any-cast to
-    // call signUp with metadata safely across versions.
-    // The metadata will be stored as user_metadata on the Supabase user.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const authAny: any = supabase.auth;
-    const response = await authAny.signUp({ email, password }, { data: metadata });
+    // Supabase JS v2 API: metadata is passed inside the options.data property
+    const response = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            data: metadata,
+        },
+    });
     return response; // { data, error }
 }
 
@@ -100,4 +102,44 @@ export async function sendPasswordReset(email: string) {
     throw new Error('Supabase client does not support resetPasswordForEmail on this SDK version.');
 }
 
-// You can expand this file with signUp, signOut, password reset helpers, etc.
+/**
+ * Delete the current user's account.
+ * This calls an RPC function 'delete_user' which must be created in Supabase.
+ * 
+ * To set up this RPC in Supabase SQL Editor:
+ * 
+ * CREATE OR REPLACE FUNCTION delete_user()
+ * RETURNS void AS $$
+ * BEGIN
+ *   DELETE FROM auth.users WHERE id = auth.uid();
+ * END;
+ * $$ LANGUAGE plpgsql SECURITY DEFINER;
+ * 
+ * Returns { data, error }
+ */
+export async function deleteAccount() {
+    try {
+        // Call the RPC function to delete the user
+        const { data, error } = await supabase.rpc('delete_user');
+
+        if (error) {
+            return { data: null, error };
+        }
+
+        // Sign out the user after successful deletion
+        await supabase.auth.signOut();
+
+        return { data, error: null };
+    } catch (error: any) {
+        return { data: null, error };
+    }
+}
+
+/**
+ * Sign out the current user
+ */
+export async function signOut() {
+    return await supabase.auth.signOut();
+}
+
+// You can expand this file with additional helpers as needed.

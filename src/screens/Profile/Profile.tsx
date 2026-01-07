@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { ProfileStyles as styles } from './Profile.styles';
 import BottomTabNav from '@/components/BottomTabNav';
+import DangerButton from '@/components/DangerButton';
 import { supabase } from '@/services/supabase/client';
 import Toast from 'react-native-toast-message';
 import colors from '@/styles/colors';
@@ -9,14 +10,16 @@ import { GlobalStyles } from '@/styles/Global.styles';
 import ProfileActive from '../../../assets/icons/profile_active.svg';
 import LoginAccountIcon from '../../../assets/icons/login_account.svg';
 import MemoryTreeIcon from '../../../assets/icons/memory_tree_active.svg';
-import NotificationSettingsIcon from '../../../assets/icons/notification_settings.svg';
 import ChevronRightIcon from '../../../assets/icons/chevron_right.svg';
 
 interface ProfileScreenProps {
     onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
+    onEditProfile: () => void;
+    onAccountPassword: () => void;
+    onManageMemories: () => void;
 }
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange, onEditProfile, onAccountPassword, onManageMemories }) => {
     const [userEmail, setUserEmail] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
     const [userDob, setUserDob] = useState<string>('');
@@ -91,57 +94,56 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
                     <Text style={GlobalStyles.mainScreenDescription}>View your profile, personal info, and settings</Text>
                 </View>
 
-                <ScrollView
-                    style={styles.scrollView}
-                    contentContainerStyle={styles.scrollContent}
-                    showsVerticalScrollIndicator={false}
-                >
+                <View style={styles.contentWrapper}>
+                    {/* User Card */}
                     <View style={styles.card}>
                         <View style={styles.avatarWrapper}>{avatarNode}</View>
                         <View style={styles.userInfo}>
                             <Text style={styles.userName}>{userName || 'Your name'}</Text>
                             <Text style={styles.userEmail}>{userEmail || 'Email not available'}</Text>
                             <Text style={styles.userDob}>{userDob || 'Add your birthday'}</Text>
-                            <TouchableOpacity style={styles.editButton} activeOpacity={0.8}>
-                                <Text style={styles.editButtonText}>Edit Profile</Text>
-                            </TouchableOpacity>
                         </View>
                     </View>
 
+                    {/* Settings Section */}
                     <View style={styles.settingsSection}>
                         <Text style={styles.settingsTitle}>Settings</Text>
 
                         <View style={styles.settingsList}>
-                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8}>
+                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8} onPress={onEditProfile}>
+                                <View style={styles.settingIconBg}>
+                                    <ProfileActive width={24} height={24} />
+                                </View>
+                                <Text style={styles.settingLabel}>Edit Profile</Text>
+                                <ChevronRightIcon width={20} height={20} style={styles.chevron} />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8} onPress={onAccountPassword}>
                                 <View style={styles.settingIconBg}>
                                     <LoginAccountIcon width={24} height={24} />
                                 </View>
-                                <Text style={styles.settingLabel}>Login & Account</Text>
+                                <Text style={styles.settingLabel}>Account & Password</Text>
                                 <ChevronRightIcon width={20} height={20} style={styles.chevron} />
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8}>
+                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8} onPress={onManageMemories}>
                                 <View style={styles.settingIconBg}>
                                     <MemoryTreeIcon width={24} height={24} />
                                 </View>
-                                <Text style={styles.settingLabel}>Memory Management</Text>
-                                <ChevronRightIcon width={20} height={20} style={styles.chevron} />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8}>
-                                <View style={styles.settingIconBg}>
-                                    <NotificationSettingsIcon width={24} height={24} />
-                                </View>
-                                <Text style={styles.settingLabel}>Notification Settings</Text>
+                                <Text style={styles.settingLabel}>Manage Memories</Text>
                                 <ChevronRightIcon width={20} height={20} style={styles.chevron} />
                             </TouchableOpacity>
                         </View>
                     </View>
 
-                    <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut} activeOpacity={0.85}>
-                        <Text style={styles.signOutText}>Sign out</Text>
-                    </TouchableOpacity>
-                </ScrollView>
+                    {/* Sign Out Button */}
+                    <DangerButton
+                        title="Sign out"
+                        onPress={handleSignOut}
+                        style={styles.signOutButton}
+                    />
+                </View>
+
                 <View style={GlobalStyles.BottomNavContainer}>
                     <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />
                 </View>

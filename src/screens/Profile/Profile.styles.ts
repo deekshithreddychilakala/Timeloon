@@ -17,14 +17,12 @@ export const ProfileStyles = StyleSheet.create({
     background: {
         backgroundColor: colors.surface,
     },
-    scrollView: {
+    contentWrapper: {
         flex: 1,
-    },
-    scrollContent: {
         paddingHorizontal: 24,
-        paddingTop: 26,
-        paddingBottom: 160,
-        gap: 24,
+        paddingTop: 31,
+        paddingBottom: 23,
+        justifyContent: 'space-between',
     },
     card: {
         backgroundColor: colors.white,
@@ -74,28 +72,13 @@ export const ProfileStyles = StyleSheet.create({
         fontFamily: Fonts.sfProTextRegular,
         color: '#8E8E93',
     },
-    editButton: {
-        marginTop: 13,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: colors.purple01,
-        alignSelf: 'flex-start',
-    },
-    editButtonText: {
-        color: colors.purple01,
-        fontFamily: Fonts.heavy,
-        fontSize: 12,
-        letterSpacing: -0.24,
-    },
     settingsSection: {
         gap: 20,
     },
     settingsTitle: {
-        fontSize: 28,
-        fontFamily: Fonts.sfProTextBold,
-        color: colors.black,
+        fontSize: 14,
+        fontFamily: Fonts.book,
+        color: '#555555',
     },
     settingsList: {
         gap: 20,
@@ -130,20 +113,7 @@ export const ProfileStyles = StyleSheet.create({
         flexShrink: 0,
     },
     signOutButton: {
-        marginTop: 40,
-        padding: 16,
-        borderColor: '#FC5445',
-        borderWidth: 1,
-        borderRadius: 12,
-        alignItems: 'center',
-        justifyContent: 'center',
-        ...cardShadow,
-    },
-    signOutText: {
-        color: '#FC5445',
-        fontFamily: Fonts.sfProTextRegular,
-        fontSize: 18,
-        textAlign: 'center',
+        width: '100%',
     },
 });
 

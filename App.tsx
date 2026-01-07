@@ -12,13 +12,16 @@ import ResetPassword from './src/screens/ResetPassword/ResetPassword';
 import ChatScreen from './src/screens/ChatScreen/ChatScreen';
 import FamilyTreeScreen from './src/screens/FamilyTree/FamilyTree';
 import ProfileScreen from './src/screens/Profile/Profile';
+import EditProfileScreen from './src/screens/EditProfile/EditProfile';
+import AccountPasswordScreen from './src/screens/AccountPassword/AccountPassword';
+import ManageMemoriesScreen from './src/screens/ManageMemories/ManageMemories';
 import { GlobalStyles as styles } from '@/styles/Global.styles';
 import { useFonts } from 'expo-font';
 import { supabase } from '@/services/supabase/client';
 
 const Stack = createNativeStackNavigator();
 
-type TabName = 'MemoryTree' | 'Chat' | 'Profile';
+type TabName = 'MemoryTree' | 'Chat' | 'Profile' | 'EditProfile' | 'AccountPassword' | 'ManageMemories';
 
 export default function App() {
   const [loaded] = useFonts({
@@ -38,20 +41,27 @@ export default function App() {
 
   useEffect(() => {
     let mounted = true;
+    let wasAuthenticated = false;
+
     supabase
       .auth
       .getSession()
       .then(({ data }) => {
         if (!mounted) return;
-        setIsAuthenticated(!!data.session);
+        wasAuthenticated = !!data.session;
+        setIsAuthenticated(wasAuthenticated);
       })
       .catch(() => setIsAuthenticated(false));
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session?.access_token);
-      if (session?.access_token) {
-        setActiveTab('Chat'); // Reset to Chat screen on sign in
+      const isNowAuthenticated = !!session?.access_token;
+      setIsAuthenticated(isNowAuthenticated);
+
+      // Only navigate to Chat on actual sign-in (not re-authentication)
+      if (isNowAuthenticated && !wasAuthenticated) {
+        setActiveTab('Chat');
       }
+      wasAuthenticated = isNowAuthenticated;
     });
 
     return () => {
@@ -72,7 +82,31 @@ export default function App() {
       case 'MemoryTree':
         return <FamilyTreeScreen onTabChange={handleTabChange} />;
       case 'Profile':
-        return <ProfileScreen onTabChange={handleTabChange} />;
+        return (
+          <ProfileScreen
+            onTabChange={handleTabChange}
+            onEditProfile={() => setActiveTab('EditProfile')}
+            onAccountPassword={() => setActiveTab('AccountPassword')}
+            onManageMemories={() => setActiveTab('ManageMemories')}
+          />
+        );
+      case 'EditProfile':
+        return <EditProfileScreen onTabChange={handleTabChange} onGoBack={() => setActiveTab('Profile')} />;
+      case 'AccountPassword':
+        return (
+          <AccountPasswordScreen
+            onTabChange={handleTabChange}
+            onGoBack={() => setActiveTab('Profile')}
+            onLogout={() => setIsAuthenticated(false)}
+          />
+        );
+      case 'ManageMemories':
+        return (
+          <ManageMemoriesScreen
+            onTabChange={handleTabChange}
+            onGoBack={() => setActiveTab('Profile')}
+          />
+        );
       case 'Chat':
       default:
         return <ChatScreen onTabChange={handleTabChange} />;
