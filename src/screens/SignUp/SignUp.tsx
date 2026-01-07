@@ -13,7 +13,7 @@ import { SignUpStyles as styles } from './SignUp.styles';
 import colors, { commonScreenStyles } from '@/styles/colors';
 import PrimaryButton from '@/components/PrimaryButton';
 import { LinearGradient } from 'expo-linear-gradient';
-import CircleLogo from '../../../assets/logo/Circle_shape.svg';
+import GradientCircleLogo from '@/components/GradientCircleLogo';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { signUp } from '@/services/supabase/client';
@@ -104,7 +104,7 @@ const SignUp: React.FC = () => {
                 start={colors.commonScreensBGConfig.start}
                 end={colors.commonScreensBGConfig.end}
                 style={colors.commonScreensBGElement}>
-                <CircleLogo style={commonScreenStyles.logoElement}></CircleLogo>
+                <GradientCircleLogo />
 
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView style={commonScreenStyles.safeArea}>

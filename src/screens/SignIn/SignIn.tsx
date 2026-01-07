@@ -15,7 +15,7 @@ import colors, { commonScreenStyles } from '@/styles/colors';
 import PrimaryButton from '@/components/PrimaryButton';
 import { signIn } from '@/services/supabase/client';
 import { LinearGradient } from 'expo-linear-gradient';
-import CircleLogo from '../../../assets/logo/Circle_shape.svg';
+import GradientCircleLogo from '@/components/GradientCircleLogo';
 
 const SignIn: React.FC = () => {
     const navigation = useNavigation<any>();
@@ -54,7 +54,7 @@ const SignIn: React.FC = () => {
                 start={colors.commonScreensBGConfig.start}
                 end={colors.commonScreensBGConfig.end}
                 style={colors.commonScreensBGElement}>
-                <CircleLogo style={commonScreenStyles.logoElement}></CircleLogo>
+                <GradientCircleLogo />
 
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView style={commonScreenStyles.safeArea}>

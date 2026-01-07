@@ -21,9 +21,10 @@ interface AccountPasswordScreenProps {
     onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
     onGoBack: () => void;
     onLogout: () => void;
+    hideBottomNav?: boolean;
 }
 
-const AccountPasswordScreen: React.FC<AccountPasswordScreenProps> = ({ onTabChange, onGoBack, onLogout }) => {
+const AccountPasswordScreen: React.FC<AccountPasswordScreenProps> = ({ onTabChange, onGoBack, onLogout, hideBottomNav }) => {
     const [currentPassword, setCurrentPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [userEmail, setUserEmail] = useState<string>('');
@@ -228,7 +229,7 @@ const AccountPasswordScreen: React.FC<AccountPasswordScreenProps> = ({ onTabChan
                 </View>
 
                 <View style={GlobalStyles.BottomNavContainer}>
-                    <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />
+                    {!hideBottomNav && <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />}
                 </View>
             </View>
 

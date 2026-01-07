@@ -15,7 +15,7 @@ export const ManageMemoriesStyles = StyleSheet.create({
         flex: 1,
     },
     background: {
-        backgroundColor: colors.surface,
+        backgroundColor: 'transparent',
     },
     contentWrapper: {
         flex: 1,

@@ -25,9 +25,10 @@ import CalendarIcon from '../../../assets/icons/calendar.svg';
 interface EditProfileScreenProps {
     onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
     onGoBack: () => void;
+    hideBottomNav?: boolean;
 }
 
-const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onTabChange, onGoBack }) => {
+const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onTabChange, onGoBack, hideBottomNav }) => {
     const [fullName, setFullName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [dob, setDob] = useState<Date | null>(null);
@@ -309,7 +310,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onTabChange, onGo
                 </View>
 
                 <View style={GlobalStyles.BottomNavContainer}>
-                    <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />
+                    {!hideBottomNav && <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />}
                 </View>
             </View>
 

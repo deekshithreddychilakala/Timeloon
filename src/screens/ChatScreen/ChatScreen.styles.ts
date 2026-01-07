@@ -47,12 +47,11 @@ export const ChatStyles = StyleSheet.create({
     },
     inputShadowContainer: {
         borderRadius: 14,
-        // White solid background for efficient shadow rasterization
         backgroundColor: colors.white,
-        // Shadow matching Figma
-        shadowColor: colors.yellow01,
+        // Purple shadow from design
+        shadowColor: '#8C43FF',
         shadowOffset: { width: 0, height: -5 },
-        shadowOpacity: 0.34,
+        shadowOpacity: 0.24,
         shadowRadius: 11,
         elevation: 8,
     },
@@ -60,11 +59,12 @@ export const ChatStyles = StyleSheet.create({
         minHeight: 118,
         alignContent: 'space-between',
         padding: 15,
-        gap: 10,
+        gap: 30,
         borderRadius: 14,
         borderWidth: 1,
-        borderColor: colors.yellow01,
-        overflow: 'hidden', // Ensure gradient respects border radius
+        borderColor: 'rgba(110, 110, 110, 0.10)',
+        backgroundColor: colors.white,
+        overflow: 'hidden',
     },
     input: {
         // flex: 1,
@@ -82,11 +82,17 @@ export const ChatStyles = StyleSheet.create({
     sendButton: {
         width: 39,
         height: 39,
-        backgroundColor: colors.primary,
-        borderRadius: 24,
+        borderRadius: 40,
+        overflow: 'hidden',
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 8,
+    },
+    sendButtonGradient: {
+        width: 39,
+        height: 39,
+        borderRadius: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     sendButtonDisabled: {
         opacity: 0.5,
@@ -116,9 +122,15 @@ export const ChatStyles = StyleSheet.create({
         paddingVertical: 17,
         paddingHorizontal: 19,
         borderRadius: 22,
-        borderWidth: 1,
-        borderColor: colors.yellow01,
         gap: 8,
+    },
+    messageBubbleInnerUser: {
+        borderWidth: 1,
+        borderColor: 'rgba(140, 67, 255, 0.15)',
+    },
+    messageBubbleInnerAssistant: {
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.06)',
     },
 
     messageTimestamp: {
@@ -132,14 +144,25 @@ export const ChatStyles = StyleSheet.create({
     messageBubbleShadowWrapper: {
         backgroundColor: colors.white,
         borderRadius: 22,
-        // iOS shadow
+        overflow: 'visible',
+    },
+    userMessageShadow: {
+        // iOS shadow - purple tint
+        shadowColor: 'rgba(140, 67, 255, 0.25)',
+        shadowOpacity: 1,
+        shadowRadius: 16,
+        shadowOffset: { width: 0, height: 4 },
+        // Android elevation
+        elevation: 8,
+    },
+    assistantMessageShadow: {
+        // iOS shadow - neutral
         shadowColor: colors.black,
         shadowOpacity: 0.06,
         shadowRadius: 24,
         shadowOffset: { width: 0, height: 8 },
         // Android elevation
         elevation: 8,
-        overflow: 'visible',
     },
     messageBubbleClip: {
         borderRadius: 22,
@@ -217,10 +240,10 @@ export const ChatStyles = StyleSheet.create({
     actionButton: {
         width: 39,
         height: 39,
-        borderRadius: 24,
-        borderWidth: 1,
-        borderColor: colors.yellow01,
-        backgroundColor: colors.white,
+        borderRadius: 40,
+        borderWidth: 1.2,
+        borderColor: 'rgba(140, 67, 255, 0.30)',
+        backgroundColor: 'transparent',
         justifyContent: 'center',
         alignItems: 'center',
     },

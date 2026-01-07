@@ -14,7 +14,7 @@ export const GlobalStyles = StyleSheet.create({
         paddingHorizontal: 27,
         gap: 4,
         flexDirection: 'column',
-        backgroundColor: colors.titleContainerBg,
+        backgroundColor: 'transparent',
         borderBottomWidth: 1,
         borderBottomColor: colors.purple01,
     },

@@ -1,102 +1,228 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, TouchableOpacity, StyleSheet, Animated, Easing, LayoutAnimation, Platform, UIManager } from 'react-native';
 import { Fonts } from '@/utils/fonts';
-import colors from '@/styles/colors';
+import { SvgProps } from 'react-native-svg';
 
 import MemoryTreeIcon from '../../assets/icons/memory_tree.svg';
-import MemoryTreeIconGold from '../../assets/icons/memory_tree_active.svg';
+import MemoryTreeIconActive from '../../assets/icons/memory_tree_active.svg';
 import ChatIcon from '../../assets/icons/ai_chat.svg';
-import ChatIconGold from '../../assets/icons/ai_chat_active.svg';
+import ChatIconActive from '../../assets/icons/ai_chat_active.svg';
 import ProfileIcon from '../../assets/icons/profile.svg';
-import ProfileIconGold from '../../assets/icons/profile_active.svg';
+import ProfileIconActive from '../../assets/icons/profile_active.svg';
 import { BlurView } from 'expo-blur';
 
+// Enable LayoutAnimation on Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 type TabItem = 'MemoryTree' | 'Chat' | 'Profile';
+
+const TAB_ORDER: TabItem[] = ['MemoryTree', 'Chat', 'Profile'];
 
 interface BottomTabNavProps {
     activeTab: TabItem;
     onTabPress: (tab: TabItem) => void;
 }
 
+interface AnimatedTabProps {
+    isActive: boolean;
+    label: string;
+    Icon: React.FC<SvgProps>;
+    IconActive: React.FC<SvgProps>;
+    onPress: () => void;
+    direction: 'left' | 'right' | 'none';
+}
+
+const AnimatedTab: React.FC<AnimatedTabProps> = ({
+    isActive,
+    label,
+    Icon,
+    IconActive,
+    onPress,
+    direction,
+}) => {
+    const animProgress = useRef(new Animated.Value(isActive ? 1 : 0)).current;
+    const prevActive = useRef(isActive);
+
+    useEffect(() => {
+        // Only animate if state changed
+        if (prevActive.current !== isActive) {
+            prevActive.current = isActive;
+
+            Animated.timing(animProgress, {
+                toValue: isActive ? 1 : 0,
+                duration: 300,
+                easing: Easing.bezier(0.4, 0, 0.2, 1), // Material Design easing
+                useNativeDriver: false,
+            }).start();
+        }
+    }, [isActive]);
+
+    const IconComp = isActive ? IconActive : Icon;
+
+    // Smooth background color transition
+    const backgroundColor = animProgress.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['rgba(140, 67, 255, 0)', 'rgba(140, 67, 255, 0.1)'],
+    });
+
+    // Smooth padding transition
+    const paddingHorizontal = animProgress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [8, 14],
+    });
+
+    // Icon scale with gentle bounce
+    const iconScale = animProgress.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [0.9, 1.05, 1],
+    });
+
+    // Label opacity - fade in during second half of animation
+    const labelOpacity = animProgress.interpolate({
+        inputRange: [0, 0.4, 1],
+        outputRange: [0, 0, 1],
+    });
+
+    // Label slide direction based on navigation direction
+    const slideOffset = direction === 'left' ? 15 : direction === 'right' ? -15 : 0;
+    const labelTranslateX = animProgress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [slideOffset, 0],
+    });
+
+    // Label scale for a subtle pop effect
+    const labelScale = animProgress.interpolate({
+        inputRange: [0, 0.6, 1],
+        outputRange: [0.8, 0.95, 1],
+    });
+
+    return (
+        <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+            <Animated.View
+                style={[
+                    styles.tab,
+                    {
+                        backgroundColor,
+                        paddingHorizontal,
+                    }
+                ]}
+            >
+                <Animated.View style={{ transform: [{ scale: iconScale }] }}>
+                    <IconComp width={30} height={30} />
+                </Animated.View>
+                {isActive && (
+                    <Animated.Text
+                        style={[
+                            styles.labelActive,
+                            {
+                                opacity: labelOpacity,
+                                transform: [
+                                    { translateX: labelTranslateX },
+                                    { scale: labelScale },
+                                ],
+                            },
+                        ]}
+                    >
+                        {label}
+                    </Animated.Text>
+                )}
+            </Animated.View>
+        </TouchableOpacity>
+    );
+};
+
 const BottomTabNav: React.FC<BottomTabNavProps> = ({
     activeTab,
     onTabPress,
 }) => {
+    const [prevTab, setPrevTab] = useState<TabItem>(activeTab);
+
+    // Calculate direction based on tab indices
+    const getDirection = (tabKey: TabItem): 'left' | 'right' | 'none' => {
+        if (tabKey !== activeTab) return 'none';
+
+        const currentIndex = TAB_ORDER.indexOf(activeTab);
+        const prevIndex = TAB_ORDER.indexOf(prevTab);
+
+        if (currentIndex > prevIndex) return 'left'; // Moving right, label slides from left
+        if (currentIndex < prevIndex) return 'right'; // Moving left, label slides from right
+        return 'none';
+    };
+
+    // Update previous tab when active tab changes
+    useEffect(() => {
+        if (activeTab !== prevTab) {
+            // Trigger layout animation for smooth repositioning
+            LayoutAnimation.configureNext({
+                duration: 300,
+                update: {
+                    type: LayoutAnimation.Types.easeInEaseOut,
+                },
+            });
+
+            // Store the previous tab for direction calculation
+            const timer = setTimeout(() => {
+                setPrevTab(activeTab);
+            }, 350);
+
+            return () => clearTimeout(timer);
+        }
+        return undefined;
+    }, [activeTab]);
+
     const tabs = [
         {
-            key: 'MemoryTree',
+            key: 'MemoryTree' as TabItem,
             label: 'Memory Tree',
             Icon: MemoryTreeIcon,
-            IconActive: MemoryTreeIconGold,
+            IconActive: MemoryTreeIconActive,
         },
         {
-            key: 'Chat',
+            key: 'Chat' as TabItem,
             label: 'AI Chat',
             Icon: ChatIcon,
-            IconActive: ChatIconGold,
+            IconActive: ChatIconActive,
         },
         {
-            key: 'Profile',
+            key: 'Profile' as TabItem,
             label: 'Profile',
             Icon: ProfileIcon,
-            IconActive: ProfileIconGold,
+            IconActive: ProfileIconActive,
         },
-    ] as const;
+    ];
 
     return (
         <View style={styles.wrapper}>
-            {/* Shadow wrapper (DO NOT put BlurView shadow directly) */}
+            {/* Shadow wrapper */}
             <View style={styles.shadowContainer}>
                 {/* Rounded container that clips blur + content */}
                 <View style={styles.glassCard}>
                     {/* Backdrop blur */}
                     <BlurView
-                        intensity={80} // stronger so it’s obvious
+                        intensity={90}
                         tint="light"
                         style={StyleSheet.absoluteFill}
                     />
 
-                    {/* Light vertical gradient & content */}
-                    <LinearGradient
-                        colors={colors.tabNavGradient}
-                        start={{ x: 0.5, y: 0 }}
-                        end={{ x: 0.5, y: 1 }}
-                        style={styles.card}
-                    >
-                        {/* Inner border to fake inset highlight */}
-                        <View style={styles.innerBorder} />
+                    {/* Inner border highlight */}
+                    <View style={styles.innerBorder} />
 
-                        <View style={styles.row}>
-                            {tabs.map(({ key, label, Icon, IconActive }) => {
-                                const isActive = activeTab === key;
-                                const IconComp = isActive ? IconActive : Icon;
-
-                                return (
-                                    <TouchableOpacity
-                                        key={key}
-                                        style={styles.tab}
-                                        onPress={() => onTabPress(key)}
-                                        activeOpacity={0.85}
-                                    >
-                                        <IconComp
-                                            width={22}
-                                            height={22}
-                                            opacity={isActive ? 1 : 0.55}
-                                        />
-                                        <Text
-                                            style={[
-                                                styles.label,
-                                                isActive && styles.labelActive,
-                                            ]}
-                                        >
-                                            {label}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
-                    </LinearGradient>
+                    {/* Tab row */}
+                    <View style={styles.row}>
+                        {tabs.map(({ key, label, Icon, IconActive }) => (
+                            <AnimatedTab
+                                key={key}
+                                isActive={activeTab === key}
+                                label={label}
+                                Icon={Icon}
+                                IconActive={IconActive}
+                                onPress={() => onTabPress(key)}
+                                direction={getDirection(key)}
+                            />
+                        ))}
+                    </View>
                 </View>
             </View>
         </View>
@@ -105,76 +231,76 @@ const BottomTabNav: React.FC<BottomTabNavProps> = ({
 
 export default BottomTabNav;
 
-const PILL_RADIUS = 24;
+const PILL_RADIUS = 14;
 
 const styles = StyleSheet.create({
-    // Positions pill above the bottom edge
     wrapper: {
-        // position: 'absolute',
-        // left: 26,
-        // right: 26,
-        // bottom: 23, // adjust with SafeArea if necessary
         alignItems: 'center',
     },
 
-    // Shadow container – approximates your big soft glow
     shadowContainer: {
-        width: '100%',
+        width: 340,
         borderRadius: PILL_RADIUS,
-        // Solid (non-transparent) background to allow efficient shadow rasterization
-        backgroundColor: colors.white,
-        // iOS shadow
-        shadowColor: colors.black,
-        shadowOpacity: 0.12,
-        shadowRadius: 28,
-        shadowOffset: { width: 0, height: 12 },
+        // Base white background for the glass effect
+        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+        // Outer shadow for depth
+        shadowColor: '#000',
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
+        shadowOffset: { width: 0, height: 4 },
         // Android elevation
-        elevation: 18,
+        elevation: 12,
     },
 
-    // Outer rounded glass card that clips blur
     glassCard: {
         borderRadius: PILL_RADIUS,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: colors.tabNavGlassBorder,
-        backgroundColor: colors.tabNavGlassBackground,
-    },
-
-    // Content pill
-    card: {
-        borderRadius: PILL_RADIUS,
-        paddingVertical: 10,
-        paddingHorizontal: 25,
-        justifyContent: 'center',
+        borderColor: 'rgba(255, 255, 255, 0.6)',
+        paddingHorizontal: 8,
+        paddingVertical: 6,
     },
 
     innerBorder: {
-        ...StyleSheet.absoluteFillObject,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         borderRadius: PILL_RADIUS,
-        borderWidth: 1,
-        borderColor: colors.tabNavInnerBorder,
+        // Inset shadow effect
+        shadowColor: '#FFF',
+        shadowOpacity: 0.12,
+        shadowRadius: 9.56,
+        shadowOffset: { width: -3.788, height: -1.47 },
     },
 
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        gap: 32,
+        alignItems: 'flex-start',
     },
 
     tab: {
-        flex: 1,
+        flexDirection: 'row',
         alignItems: 'center',
-        gap: 4,
+        justifyContent: 'center',
+        paddingVertical: 9,
+        paddingHorizontal: 8,
+        borderRadius: 10,
+        gap: 5,
     },
 
-    label: {
-        fontFamily: Fonts.book,
-        fontSize: 10,
-        color: colors.black03,
+    tabActive: {
+        backgroundColor: 'rgba(140, 67, 255, 0.1)',
+        paddingHorizontal: 11,
+        gap: 10,
     },
 
     labelActive: {
-        color: colors.black,
+        fontFamily: Fonts.medium,
+        fontSize: 18,
+        letterSpacing: -0.1,
+        color: '#8C43FF',
     },
 });

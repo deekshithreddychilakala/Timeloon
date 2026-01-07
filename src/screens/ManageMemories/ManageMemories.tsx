@@ -14,9 +14,10 @@ type DeleteOption = 'memories' | 'photos' | 'everything';
 interface ManageMemoriesScreenProps {
     onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
     onGoBack: () => void;
+    hideBottomNav?: boolean;
 }
 
-const ManageMemoriesScreen: React.FC<ManageMemoriesScreenProps> = ({ onTabChange, onGoBack }) => {
+const ManageMemoriesScreen: React.FC<ManageMemoriesScreenProps> = ({ onTabChange, onGoBack, hideBottomNav }) => {
     const [selectedOption, setSelectedOption] = useState<DeleteOption>('everything');
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -119,7 +120,7 @@ const ManageMemoriesScreen: React.FC<ManageMemoriesScreenProps> = ({ onTabChange
                 </View>
 
                 <View style={GlobalStyles.BottomNavContainer}>
-                    <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />
+                    {!hideBottomNav && <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />}
                 </View>
             </View>
 

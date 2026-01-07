@@ -8,7 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import TypingIndicator from '@/components/TypingIndicator';
 import PlusIcon from '../../../assets/icons/plus.svg';
-import ArrowRightIcon from '../../../assets/icons/arrow_right.svg';
+import ChatSendMsgIcon from '../../../assets/icons/chat_send_icon.svg';
 import colors from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalStyles } from '@/styles/Global.styles';
@@ -43,9 +43,10 @@ function formatTimestamp(ts?: string | number | Date | null): string {
 
 interface ChatScreenProps {
     onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
+    hideBottomNav?: boolean;
 }
 
-const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
+const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange, hideBottomNav }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageText, setMessageText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -436,10 +437,18 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
         const timestamp = formatTimestamp((message as any).createdAt || (message as any).created_at || (message as any).timestamp || null);
         return (
-            <View key={message.id} style={[styles.messageBubbleShadowWrapper, styles.messageBubble, isUserMessage ? styles.userMessage : styles.assistantMessage]}>
+            <View key={message.id} style={[
+                styles.messageBubbleShadowWrapper,
+                styles.messageBubble,
+                isUserMessage ? styles.userMessage : styles.assistantMessage,
+                isUserMessage ? styles.userMessageShadow : styles.assistantMessageShadow
+            ]}>
                 <View style={styles.messageBubbleClip}>
                     <LinearGradient {...gradientProps} style={styles.messageBubbleGradient}>
-                        <View style={styles.messageBubbleInner}>
+                        <View style={[
+                            styles.messageBubbleInner,
+                            isUserMessage ? styles.messageBubbleInnerUser : styles.messageBubbleInnerAssistant
+                        ]}>
                             {message.content ? (
                                 <Text
                                     style={[
@@ -549,12 +558,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
                 <View style={GlobalStyles.BottomNavContainer}>
                     <View style={styles.inputShadowContainer}>
-                        <LinearGradient
-                            colors={colors.inputGradientColors}
-                            start={{ x: 0.5, y: 0 }}
-                            end={{ x: 0.5, y: 1 }}
-                            style={styles.inputContainer}
-                        >
+                        <View style={styles.inputContainer}>
                             {imageUri && !isUploading && (
                                 <View style={styles.imagePreviewContainer}>
                                     <Image source={{ uri: imageUri }} style={styles.imagePreview} />
@@ -590,14 +594,20 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                                     activeOpacity={0.7}
                                     disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
                                 >
-                                    {isLoading ? (
-                                        <ActivityIndicator size="small" color="#000" />
-                                    ) : (
-                                        <ArrowRightIcon width={24} height={24} />
-                                    )}
+                                    <LinearGradient
+                                        colors={['#C9A0FF', '#A770FF', '#A770FF']}
+                                        locations={[0, 0.5, 1]}
+                                        style={styles.sendButtonGradient}
+                                    >
+                                        {isLoading ? (
+                                            <ActivityIndicator size="small" color="#FFF" />
+                                        ) : (
+                                            <ChatSendMsgIcon width={18} height={18} />
+                                        )}
+                                    </LinearGradient>
                                 </TouchableOpacity>
                             </View>
-                        </LinearGradient>
+                        </View>
                     </View>
 
                     <AttachmentSheet
@@ -608,7 +618,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         onFile={pickDocument}
                     />
 
-                    <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
+                    {!hideBottomNav && <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />}
                 </View>
             </LinearGradient>
         </View>

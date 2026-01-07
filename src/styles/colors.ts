@@ -36,7 +36,7 @@ export const colors = {
     textUnderlineColor: 'rgba(42, 42, 44, 0.15)',
 
     yellow01: '#FFDFA6',
-    activeTabIcon: '#E5AB47',
+    activeTabIcon: '#8C43FF',
     purple01: '#A475EF',
     titleContainerBg: 'rgba(255, 255, 255, 0.95)',
 
@@ -59,8 +59,8 @@ export const colors = {
     buttonGradient: ['rgba(255,255,255,0.3)', 'rgba(255,255,255,0.0)'],
 
     // Message bubble gradients
-    messageBubbleUserColors: ['rgba(255,255,255,0.90)', 'rgba(255,233,197,0.85)', 'rgba(255,223,166,0.77)'],
-    messageBubbleAssistantColors: ['rgba(255,223,166,0.28)', 'rgba(255,223,166,0.14)', 'rgba(255,223,166,0.34)'],
+    messageBubbleUserColors: ['rgba(244, 237, 255, 0.90)', 'rgba(197, 161, 255, 0.55)'],
+    messageBubbleAssistantColors: ['rgba(250, 247, 255, 1)', 'rgba(245, 240, 255, 1)'],
 
     // Input gradient
     inputGradientColors: ['#FFF7EA', '#FFF'],
@@ -70,11 +70,11 @@ export const colors = {
 
     // Gradient used on LandingScreen (matches Figma values)
     landingScreenBG_Gradient: {
-        // angle: 195deg approximately mapped to start/end points
-        start: { x: 1.35, y: 0.10 },
-        end: { x: -0.25, y: 0.90 },
-        colors: ['#FFBB33', '#FFFFFF', '#FFE792'],
-        locations: [0.0509, 0.4777, 0.9045]
+        // 359deg gradient (nearly vertical, bottom to top)
+        start: { x: 0.5, y: 1 },
+        end: { x: 0.5, y: 0 },
+        colors: ['#A166FF', '#FFFFFF', '#F5EFFF', '#E8D9FF'],
+        locations: [0.0388, 0.3455, 0.7932, 0.9915]
     },
 
     commonScreensBGElement: {
@@ -90,7 +90,7 @@ export const colors = {
     } as ViewStyle,
 
     commonScreensBGConfig: {
-        colors: ['#FAFAFA', '#FAFAFA'],
+        colors: ['transparent', 'transparent'],
         start: { x: 0.5, y: 1 },
         end: { x: 0.5, y: 0 }
     },

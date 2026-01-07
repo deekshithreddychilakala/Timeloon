@@ -17,9 +17,10 @@ interface ProfileScreenProps {
     onEditProfile: () => void;
     onAccountPassword: () => void;
     onManageMemories: () => void;
+    hideBottomNav?: boolean;
 }
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange, onEditProfile, onAccountPassword, onManageMemories }) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange, onEditProfile, onAccountPassword, onManageMemories, hideBottomNav }) => {
     const [userEmail, setUserEmail] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
     const [userDob, setUserDob] = useState<string>('');
@@ -145,7 +146,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange, onEditProfil
                 </View>
 
                 <View style={GlobalStyles.BottomNavContainer}>
-                    <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />
+                    {!hideBottomNav && <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />}
                 </View>
             </View>
 

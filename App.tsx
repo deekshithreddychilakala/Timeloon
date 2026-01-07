@@ -15,6 +15,7 @@ import ProfileScreen from './src/screens/Profile/Profile';
 import EditProfileScreen from './src/screens/EditProfile/EditProfile';
 import AccountPasswordScreen from './src/screens/AccountPassword/AccountPassword';
 import ManageMemoriesScreen from './src/screens/ManageMemories/ManageMemories';
+import MainTabLayout from './src/components/MainTabLayout';
 import { GlobalStyles as styles } from '@/styles/Global.styles';
 import { useFonts } from 'expo-font';
 import { supabase } from '@/services/supabase/client';
@@ -22,6 +23,7 @@ import { supabase } from '@/services/supabase/client';
 const Stack = createNativeStackNavigator();
 
 type TabName = 'MemoryTree' | 'Chat' | 'Profile' | 'EditProfile' | 'AccountPassword' | 'ManageMemories';
+type MainTab = 'MemoryTree' | 'Chat' | 'Profile';
 
 export default function App() {
   const [loaded] = useFonts({
@@ -76,11 +78,24 @@ export default function App() {
 
   if (!loaded || isAuthenticated === null) return null; // avoid flash
 
-  // Render the appropriate screen based on active tab
-  const renderAuthenticatedScreen = () => {
+  // Get the current main tab for the bottom nav
+  const getCurrentMainTab = (): MainTab => {
+    if (activeTab === 'EditProfile' || activeTab === 'AccountPassword' || activeTab === 'ManageMemories') {
+      return 'Profile';
+    }
+    return activeTab as MainTab;
+  };
+
+  // Handle bottom nav tab press
+  const handleMainTabPress = (tab: MainTab) => {
+    setActiveTab(tab);
+  };
+
+  // Render the screen content (without bottom nav - that's in the layout)
+  const renderScreenContent = () => {
     switch (activeTab) {
       case 'MemoryTree':
-        return <FamilyTreeScreen onTabChange={handleTabChange} />;
+        return <FamilyTreeScreen onTabChange={handleTabChange} hideBottomNav />;
       case 'Profile':
         return (
           <ProfileScreen
@@ -88,16 +103,18 @@ export default function App() {
             onEditProfile={() => setActiveTab('EditProfile')}
             onAccountPassword={() => setActiveTab('AccountPassword')}
             onManageMemories={() => setActiveTab('ManageMemories')}
+            hideBottomNav
           />
         );
       case 'EditProfile':
-        return <EditProfileScreen onTabChange={handleTabChange} onGoBack={() => setActiveTab('Profile')} />;
+        return <EditProfileScreen onTabChange={handleTabChange} onGoBack={() => setActiveTab('Profile')} hideBottomNav />;
       case 'AccountPassword':
         return (
           <AccountPasswordScreen
             onTabChange={handleTabChange}
             onGoBack={() => setActiveTab('Profile')}
             onLogout={() => setIsAuthenticated(false)}
+            hideBottomNav
           />
         );
       case 'ManageMemories':
@@ -105,12 +122,25 @@ export default function App() {
           <ManageMemoriesScreen
             onTabChange={handleTabChange}
             onGoBack={() => setActiveTab('Profile')}
+            hideBottomNav
           />
         );
       case 'Chat':
       default:
-        return <ChatScreen onTabChange={handleTabChange} />;
+        return <ChatScreen onTabChange={handleTabChange} hideBottomNav />;
     }
+  };
+
+  // Render authenticated screen with persistent bottom nav
+  const renderAuthenticatedScreen = () => {
+    return (
+      <MainTabLayout
+        activeTab={getCurrentMainTab()}
+        onTabPress={handleMainTabPress}
+      >
+        {renderScreenContent()}
+      </MainTabLayout>
+    );
   };
 
   return (
