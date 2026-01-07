@@ -30,7 +30,6 @@ yarn start
 Notes
 - This repo includes:
   - `src/services/supabase/client.ts` — Supabase client + small helpers
-  - `src/store/userStore.ts` and `src/store/appStore.ts` — Zustand stores
   - `tsconfig.json` — path aliases set up for `@/...`
   - Placeholder folders: `src/utils/`, `src/hooks/`, `src/types/`, `assets/`
 
