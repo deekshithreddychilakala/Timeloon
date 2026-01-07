@@ -62,11 +62,11 @@ const WarningModal: React.FC<WarningModalProps> = ({
                             {/* Warning Message */}
                             <View style={styles.messageContainer}>
                                 <Text style={styles.warningTitle}>Warning:</Text>
-                                <Text style={styles.messageText}>{'\n'}</Text>
+                                <View style={styles.textGap} />
                                 <Text style={styles.messageText}>
                                     {content.mainMessage}
                                 </Text>
-                                <Text style={styles.messageText}>{'\n'}</Text>
+                                <View style={styles.textGap} />
                                 <Text style={styles.messageText}>
                                     {content.footerMessage}
                                 </Text>
@@ -114,6 +114,8 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         paddingHorizontal: 20,
         gap: 40,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.00)',
         shadowColor: '#000',
         shadowOffset: { width: -0.2, height: 2.75 },
         shadowOpacity: 0.15,
@@ -122,6 +124,9 @@ const styles = StyleSheet.create({
     },
     messageContainer: {
         width: '100%',
+    },
+    textGap: {
+        height: 30,
     },
     warningTitle: {
         fontFamily: Fonts.heavy,

@@ -8,6 +8,8 @@ import { WarningModal } from '@/components/DeleteAccountModal';
 import colors from '@/styles/colors';
 import { GlobalStyles } from '@/styles/Global.styles';
 import Toast from 'react-native-toast-message';
+import RadioSelectedIcon from '../../../assets/icons/radio_selected.svg';
+import RadioUnselectedIcon from '../../../assets/icons/radio_unselected.svg';
 
 type DeleteOption = 'memories' | 'photos' | 'everything';
 
@@ -60,9 +62,9 @@ const ManageMemoriesScreen: React.FC<ManageMemoriesScreenProps> = ({ onTabChange
     };
 
     const renderRadioButton = (isSelected: boolean) => (
-        <View style={[styles.radioOuter, isSelected && styles.radioOuterSelected]}>
-            {isSelected && <View style={styles.radioInner} />}
-        </View>
+        isSelected
+            ? <RadioSelectedIcon width={20} height={20} />
+            : <RadioUnselectedIcon width={20} height={20} />
     );
 
     return (

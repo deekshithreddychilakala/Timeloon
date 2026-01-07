@@ -25,9 +25,7 @@ export const ManageMemoriesStyles = StyleSheet.create({
     },
     card: {
         flex: 1,
-        paddingTop: 20,
-        paddingBottom: 20,
-        paddingHorizontal: 20,
+        padding: 20,
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -48,23 +46,9 @@ export const ManageMemoriesStyles = StyleSheet.create({
         gap: 20,
         ...cardShadow,
     },
-    radioOuter: {
+    radioIcon: {
         width: 20,
         height: 20,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: 'rgba(140, 67, 255, 0.4)',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    radioOuterSelected: {
-        borderColor: '#8C43FF',
-    },
-    radioInner: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#8C43FF',
     },
     optionLabel: {
         fontFamily: Fonts.sfProTextRegular,
