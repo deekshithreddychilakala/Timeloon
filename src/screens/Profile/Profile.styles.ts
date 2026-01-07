@@ -2,79 +2,118 @@ import { StyleSheet } from 'react-native';
 import colors from '@/styles/colors';
 import { Fonts } from '@/utils/fonts';
 
+const cardShadow = {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 3,
+};
+
 export const ProfileStyles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    background: {
+        backgroundColor: 'transparent',
+    },
+    contentWrapper: {
+        flex: 1,
+        paddingHorizontal: 24,
+        paddingTop: 31,
+        paddingBottom: 23,
+        justifyContent: 'space-between',
+    },
+    card: {
         backgroundColor: colors.white,
+        borderRadius: 24,
+        paddingVertical: 20,
+        paddingHorizontal: 14,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 20,
+        ...cardShadow,
     },
-    scrollContent: {
-        flexGrow: 1,
-        paddingBottom: 100, // space for bottom tab
+    avatarWrapper: {
+        width: 112,
+        height: 112,
+        borderRadius: 56,
+        backgroundColor: colors.gray02,
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...cardShadow,
+        shadowOpacity: 0.15,
+        shadowColor: colors.purple01,
+        flexShrink: 0,
     },
-    header: {
-        paddingTop: 60,
-        paddingHorizontal: 27.3,
-        paddingBottom: 20,
-        backgroundColor: 'rgba(255,255,255,0.95)',
-        borderBottomWidth: 1,
-        borderBottomColor: colors.tertiary,
+    avatarImage: {
+        width: 104,
+        height: 104,
+        borderRadius: 52,
     },
-    title: {
-        fontFamily: Fonts.heavy,
+    userInfo: {
+        flex: 1,
+        gap: 6,
+    },
+    userName: {
         fontSize: 20,
+        fontFamily: Fonts.heavy,
         letterSpacing: -0.4,
         color: colors.black,
-        marginBottom: 4,
+        alignSelf: 'stretch',
     },
-    subtitle: {
+    userEmail: {
+        fontSize: 14,
+        fontFamily: Fonts.sfProTextRegular,
+        color: '#8E8E93',
+    },
+    userDob: {
+        fontSize: 14,
+        fontFamily: Fonts.sfProTextRegular,
+        color: '#8E8E93',
+    },
+    settingsSection: {
+        gap: 20,
+    },
+    settingsTitle: {
+        fontSize: 14,
         fontFamily: Fonts.book,
-        fontSize: 13,
-        letterSpacing: -0.13,
-        color: colors.black02,
+        color: '#555555',
     },
-    content: {
+    settingsList: {
+        gap: 20,
+    },
+    settingItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        gap: 20,
+        backgroundColor: colors.white,
+        borderRadius: 12,
+        ...cardShadow,
+    },
+    settingIconBg: {
+        width: 44,
+        height: 44,
+        borderRadius: 28,
+        backgroundColor: 'rgba(164, 117, 239, 0.06)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+    },
+    settingLabel: {
         flex: 1,
-        padding: 27.3,
-    },
-    section: {
-        marginBottom: 30,
-    },
-    sectionTitle: {
-        fontFamily: Fonts.heavy,
-        fontSize: 16,
-        letterSpacing: -0.32,
+        fontSize: 18,
+        fontFamily: Fonts.sfProTextRegular,
         color: colors.black,
-        marginBottom: 12,
     },
-    infoRow: {
-        marginBottom: 12,
-    },
-    infoLabel: {
-        fontFamily: Fonts.book,
-        fontSize: 13,
-        letterSpacing: -0.13,
-        color: colors.black03,
-        marginBottom: 4,
-    },
-    infoValue: {
-        fontFamily: Fonts.medium,
-        fontSize: 15,
-        letterSpacing: -0.15,
-        color: colors.black,
+    chevron: {
+        width: 20,
+        height: 20,
+        flexShrink: 0,
     },
     signOutButton: {
-        marginTop: 30,
-        paddingVertical: 14.1,
-        paddingHorizontal: 27.3,
-        backgroundColor: colors.primary,
-        borderRadius: 12,
-        alignItems: 'center',
-    },
-    signOutButtonText: {
-        fontFamily: Fonts.heavy,
-        fontSize: 15,
-        letterSpacing: -0.3,
-        color: colors.black,
+        width: '100%',
     },
 });
 

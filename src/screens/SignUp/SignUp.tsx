@@ -13,7 +13,7 @@ import { SignUpStyles as styles } from './SignUp.styles';
 import colors, { commonScreenStyles } from '@/styles/colors';
 import PrimaryButton from '@/components/PrimaryButton';
 import { LinearGradient } from 'expo-linear-gradient';
-import CircleLogo from '../../../assets/logo/Circle_shape.svg';
+import GradientCircleLogo from '@/components/GradientCircleLogo';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { signUp } from '@/services/supabase/client';
@@ -66,10 +66,10 @@ const SignUp: React.FC = () => {
             console.log('signUp response', resp);
             if (resp.error) {
                 console.warn('Sign up error:', resp.error);
-                Toast.show({ type: 'error', text1: 'Sign up failed', text2: resp.error.message || 'Unable to create account' });
+                Toast.show({ type: 'error', text1: 'Sign up failed', text2: resp.error.message || 'Unable to create account', position: 'top' });
             } else {
                 // Show a non-blocking toast for success, then navigate appropriately
-                Toast.show({ type: 'success', text1: 'Sign up successful', text2: 'Your account was created.' });
+                Toast.show({ type: 'success', text1: 'Sign up successful', text2: 'Your account was created.', position: 'top' });
                 const hasSession = !!(resp?.data?.session ?? resp?.data?.user);
                 // Give the toast a moment to be visible before navigation
                 setTimeout(() => {
@@ -104,7 +104,7 @@ const SignUp: React.FC = () => {
                 start={colors.commonScreensBGConfig.start}
                 end={colors.commonScreensBGConfig.end}
                 style={colors.commonScreensBGElement}>
-                <CircleLogo style={commonScreenStyles.logoElement}></CircleLogo>
+                <GradientCircleLogo />
 
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView style={commonScreenStyles.safeArea}>

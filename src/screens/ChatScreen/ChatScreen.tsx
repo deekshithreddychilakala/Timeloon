@@ -1,16 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Image, ActionSheetIOS, Platform, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
 import { ChatStyles as styles } from './ChatScreen.styles';
 import BottomTabNav from '@/components/BottomTabNav';
 import { supabase } from '@/services/supabase/client';
 import Toast from 'react-native-toast-message';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import TypingIndicator from '@/components/TypingIndicator';
-import PlusIcon from '@/components/icons/PlusIcon';
-import ArrowRightIcon from '@/components/icons/ArrowRightIcon';
+import PlusIcon from '../../../assets/icons/plus.svg';
+import ChatSendMsgIcon from '../../../assets/icons/chat_send_icon.svg';
 import colors from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalStyles } from '@/styles/Global.styles';
+import AttachmentSheet from '@/components/AttachmentSheet';
+import UploadProgress from '@/components/UploadProgress';
+import UploadFailed from '@/components/UploadFailed';
 
 interface Message {
     id: string;
@@ -22,11 +26,27 @@ interface Message {
     image_path?: string;
 }
 
-interface ChatScreenProps {
-    onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
+function formatTimestamp(ts?: string | number | Date | null): string {
+    try {
+        const d = ts ? new Date(ts as any) : new Date();
+        let hours = d.getHours();
+        const minutes = d.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        if (hours === 0) hours = 12;
+        const mm = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        return `${hours}:${mm} ${ampm}`;
+    } catch {
+        return '';
+    }
 }
 
-const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
+interface ChatScreenProps {
+    onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
+    hideBottomNav?: boolean;
+}
+
+const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange, hideBottomNav }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageText, setMessageText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +54,8 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
     const [userId, setUserId] = useState<string | null>(null);
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadFailed, setUploadFailed] = useState(false);
     const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
     const [waitingForResponse, setWaitingForResponse] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
@@ -56,7 +78,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 Toast.show({
                     type: 'error',
                     text1: 'Authentication error',
-                    position: 'bottom',
+                    position: 'top',
                 });
             }
         };
@@ -81,7 +103,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 Toast.show({
                     type: 'error',
                     text1: 'Failed to load messages',
-                    position: 'bottom',
+                    position: 'top',
                 });
             } finally {
                 setIsInitialLoading(false);
@@ -107,12 +129,10 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         const newMessage = payload.new as Message;
                         setMessages(prev => [...prev, newMessage]);
 
-                        // If assistant message received, stop waiting
                         if (newMessage.role === 'assistant') {
                             setWaitingForResponse(false);
                         }
 
-                        // Auto scroll to bottom on new message
                         setTimeout(() => {
                             scrollViewRef.current?.scrollToEnd({ animated: true });
                         }, 100);
@@ -136,34 +156,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         };
     }, []);
 
-    const selectImageSource = () => {
-        if (Platform.OS === 'ios') {
-            ActionSheetIOS.showActionSheetWithOptions(
-                {
-                    options: ['Cancel', 'Take Photo', 'Choose from Library'],
-                    cancelButtonIndex: 0,
-                },
-                (buttonIndex) => {
-                    if (buttonIndex === 1) {
-                        pickImageFromCamera();
-                    } else if (buttonIndex === 2) {
-                        pickImageFromLibrary();
-                    }
-                }
-            );
-        } else {
-            Alert.alert(
-                'Select Image',
-                'Choose an option',
-                [
-                    { text: 'Cancel', style: 'cancel' },
-                    { text: 'Take Photo', onPress: pickImageFromCamera },
-                    { text: 'Choose from Library', onPress: pickImageFromLibrary },
-                ],
-                { cancelable: true }
-            );
-        }
-    };
+    const [attachmentVisible, setAttachmentVisible] = useState(false);
+    const openAttachmentSheet = () => setAttachmentVisible(true);
+    const closeAttachmentSheet = () => setAttachmentVisible(false);
 
     const validateImageSize = async (uri: string): Promise<boolean> => {
         try {
@@ -176,7 +171,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                     type: 'error',
                     text1: 'Image too large',
                     text2: 'Please select an image smaller than 5MB',
-                    position: 'bottom',
+                    position: 'top',
                     visibilityTime: 3000,
                 });
                 return false;
@@ -197,7 +192,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                     type: 'error',
                     text1: 'Permission denied',
                     text2: 'We need camera permissions to take photos',
-                    position: 'bottom',
+                    position: 'top',
                 });
                 return;
             }
@@ -212,6 +207,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 const isValid = await validateImageSize(result.assets[0].uri);
                 if (isValid) {
                     setImageUri(result.assets[0].uri);
+                    closeAttachmentSheet();
                 }
             }
         } catch (error) {
@@ -219,7 +215,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Failed to take photo',
-                position: 'bottom',
+                position: 'top',
             });
         }
     };
@@ -233,7 +229,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                     type: 'error',
                     text1: 'Permission denied',
                     text2: 'We need camera roll permissions',
-                    position: 'bottom',
+                    position: 'top',
                 });
                 return;
             }
@@ -248,6 +244,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                 const isValid = await validateImageSize(result.assets[0].uri);
                 if (isValid) {
                     setImageUri(result.assets[0].uri);
+                    closeAttachmentSheet();
                 }
             }
         } catch (error) {
@@ -255,8 +252,28 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Failed to select image',
-                position: 'bottom',
+                position: 'top',
             });
+        }
+    };
+
+    const pickDocument = async () => {
+        try {
+            const result = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true, multiple: false });
+            if (!result.canceled && result.assets && result.assets.length > 0) {
+                const asset = result.assets[0];
+                Toast.show({
+                    type: 'info',
+                    text1: 'File attachments',
+                    text2: `${asset.name} selected. Support coming soon`,
+                    position: 'top',
+                });
+            }
+        } catch (error) {
+            console.error('Error picking file:', error);
+            Toast.show({ type: 'error', text1: 'Failed to select file', position: 'top' });
+        } finally {
+            closeAttachmentSheet();
         }
     };
 
@@ -264,35 +281,50 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         if (!userId) return null;
 
         setIsUploading(true);
+        setUploadProgress(0);
 
         try {
             const response = await fetch(uri);
-            const blob = await response.blob();
-            const fileExt = uri.split('.').pop();
+            const arrayBuffer = await response.arrayBuffer();
+            const fileExt = uri.split('.').pop() || 'jpg';
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
             const filePath = `${userId}/${fileName}`;
 
+            // Determine content type
+            const contentType = fileExt === 'png' ? 'image/png' : 'image/jpeg';
+
+            // Simulate progress (Supabase doesn't provide upload progress callback)
+            const progressInterval = setInterval(() => {
+                setUploadProgress(prev => Math.min(prev + 10, 90));
+            }, 200);
+
             const { data, error } = await supabase.storage
                 .from('message_images')
-                .upload(filePath, blob, {
+                .upload(filePath, arrayBuffer, {
                     cacheControl: '3600',
                     upsert: false,
+                    contentType: contentType,
                 });
+
+            clearInterval(progressInterval);
+            setUploadProgress(100);
 
             if (error) throw error;
 
             return data.path;
         } catch (error) {
             console.error('Error uploading image:', error);
-            Toast.show({
-                type: 'error',
-                text1: 'Failed to upload image',
-                position: 'bottom',
-            });
+            setUploadFailed(true);
             return null;
         } finally {
             setIsUploading(false);
+            setUploadProgress(0);
         }
+    };
+
+    const handleRetryUpload = () => {
+        setUploadFailed(false);
+        handleSendMessage();
     };
 
     const getSignedUrl = async (path: string): Promise<string> => {
@@ -375,6 +407,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
             setMessageText('');
             setImageUri(null);
+            setUploadFailed(false);
             setWaitingForResponse(true);
 
             // Scroll to bottom after sending
@@ -386,7 +419,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Failed to send message',
-                position: 'bottom',
+                position: 'top',
             });
             setWaitingForResponse(false);
         } finally {
@@ -398,30 +431,43 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
         const isUserMessage = message.role === 'user';
         const imageUrl = message.image_path ? imageUrls[message.image_path] : null;
 
+        const gradientProps = isUserMessage
+            ? { colors: colors.messageBubbleUserColors, start: { x: 0.5, y: 0 }, end: { x: 0.5, y: 1 } }
+            : { colors: colors.messageBubbleAssistantColors, start: { x: 0, y: 0.5 }, end: { x: 1, y: 0.5 } };
+
+        const timestamp = formatTimestamp((message as any).createdAt || (message as any).created_at || (message as any).timestamp || null);
         return (
-            <View
-                key={message.id}
-                style={[
-                    styles.messageBubble,
-                    isUserMessage ? styles.userMessage : styles.assistantMessage
-                ]}
-            >
-                {message.type === 'image' && imageUrl && (
-                    <Image
-                        source={{ uri: imageUrl }}
-                        style={styles.messageImage}
-                        resizeMode="cover"
-                    />
-                )}
-                {message.content ? (
-                    <Text style={[
-                        styles.messageText,
-                        isUserMessage ? styles.userMessageText : styles.assistantMessageText,
-                        (message.type === 'image' && imageUrl) ? styles.messageTextWithImage : null
-                    ]}>
-                        {message.content}
-                    </Text>
-                ) : null}
+            <View key={message.id} style={[
+                styles.messageBubbleShadowWrapper,
+                styles.messageBubble,
+                isUserMessage ? styles.userMessage : styles.assistantMessage,
+                isUserMessage ? styles.userMessageShadow : styles.assistantMessageShadow
+            ]}>
+                <View style={styles.messageBubbleClip}>
+                    <LinearGradient {...gradientProps} style={styles.messageBubbleGradient}>
+                        <View style={[
+                            styles.messageBubbleInner,
+                            isUserMessage ? styles.messageBubbleInnerUser : styles.messageBubbleInnerAssistant
+                        ]}>
+                            {message.content ? (
+                                <Text
+                                    style={[
+                                        styles.messageText,
+                                        isUserMessage ? styles.userMessageText : styles.assistantMessageText,
+                                    ]}
+                                >
+                                    {message.content}
+                                </Text>
+                            ) : null}
+                            {message.type === 'image' && imageUrl && (
+                                <Image source={{ uri: imageUrl }} style={styles.messageImage} resizeMode="cover" />
+                            )}
+                            {timestamp ? (
+                                <Text style={styles.messageTimestamp}>{timestamp}</Text>
+                            ) : null}
+                        </View>
+                    </LinearGradient>
+                </View>
             </View>
         );
     };
@@ -471,7 +517,35 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
                         </View>
                     ) : (
                         <View style={styles.messagesContainer}>
-                            {messages.map(renderMessage)}
+                            {messages.map((message, idx) => {
+                                const prev = messages[idx - 1];
+                                const currDate = new Date(message.created_at);
+                                const prevDate = prev ? new Date(prev.created_at) : null;
+                                const changedDay = !prevDate || currDate.toDateString() !== prevDate.toDateString();
+
+                                const dateLabel = `${currDate.toLocaleString('default', { month: 'long' })} ${currDate.getDate()}, ${currDate.getFullYear()}`;
+
+                                return (
+                                    <React.Fragment key={message.id}>
+                                        {changedDay ? (
+                                            <View style={styles.dateSeparatorContainer}>
+                                                <Text style={styles.dateSeparatorText}>{dateLabel}</Text>
+                                            </View>
+                                        ) : null}
+                                        {renderMessage(message)}
+                                    </React.Fragment>
+                                );
+                            })}
+                            {isUploading && (
+                                <View style={[styles.messageBubble, styles.userMessage, styles.uploadProgressWrapper]}>
+                                    <UploadProgress progress={uploadProgress} />
+                                </View>
+                            )}
+                            {uploadFailed && (
+                                <View style={[styles.messageBubble, styles.userMessage, styles.uploadProgressWrapper]}>
+                                    <UploadFailed onRetry={handleRetryUpload} />
+                                </View>
+                            )}
                             {waitingForResponse && (
                                 <View style={[styles.messageBubble, styles.assistantMessage]}>
                                     <TypingIndicator />
@@ -482,56 +556,70 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onTabChange }) => {
 
                 </ScrollView>
 
-                <View style={styles.inputContainer}>
-                    {imageUri && (
-                        <View style={styles.imagePreviewContainer}>
-                            <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-                            <TouchableOpacity
-                                style={styles.removeImageButton}
-                                onPress={() => setImageUri(null)}
-                            >
-                                <Text style={styles.removeImageText}>✕</Text>
-                            </TouchableOpacity>
+                <View style={GlobalStyles.BottomNavContainer}>
+                    <View style={styles.inputShadowContainer}>
+                        <View style={styles.inputContainer}>
+                            {imageUri && !isUploading && (
+                                <View style={styles.imagePreviewContainer}>
+                                    <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                                    <TouchableOpacity
+                                        style={styles.removeImageButton}
+                                        onPress={() => setImageUri(null)}
+                                    >
+                                        <Text style={styles.removeImageText}>✕</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                            <TextInput
+                                style={styles.input}
+                                placeholder="How can I help you today?"
+                                placeholderTextColor="#B8B8B8"
+                                value={messageText}
+                                onChangeText={setMessageText}
+                                multiline
+                                editable={!isLoading && !isUploading}
+                            />
+
+                            <View style={styles.actionButtons}>
+                                <TouchableOpacity
+                                    style={[styles.actionButton, (isLoading || isUploading) && styles.sendButtonDisabled]}
+                                    onPress={openAttachmentSheet}
+                                    disabled={isLoading || isUploading}
+                                >
+                                    <PlusIcon width={24} height={24} />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.sendButton, (isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
+                                    onPress={handleSendMessage}
+                                    activeOpacity={0.7}
+                                    disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
+                                >
+                                    <LinearGradient
+                                        colors={['#C9A0FF', '#A770FF', '#A770FF']}
+                                        locations={[0, 0.5, 1]}
+                                        style={styles.sendButtonGradient}
+                                    >
+                                        {isLoading ? (
+                                            <ActivityIndicator size="small" color="#FFF" />
+                                        ) : (
+                                            <ChatSendMsgIcon width={18} height={18} />
+                                        )}
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    )}
-                    <View style={styles.inputRow}>
-                        <TouchableOpacity
-                            style={styles.imageButton}
-                            onPress={selectImageSource}
-                            disabled={isLoading || isUploading}
-                        >
-                            {isUploading ? (
-                                <ActivityIndicator size="small" color="#E5AB47" />
-                            ) : (
-                                <PlusIcon />
-                            )}
-                        </TouchableOpacity>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="How can I help you today?"
-                            placeholderTextColor="#B8B8B8"
-                            value={messageText}
-                            onChangeText={setMessageText}
-                            multiline
-                            editable={!isLoading && !isUploading}
-                        />
-                        <TouchableOpacity
-                            style={[styles.sendButton, (isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)) && styles.sendButtonDisabled]}
-                            onPress={handleSendMessage}
-                            activeOpacity={0.7}
-                            disabled={isLoading || isUploading || waitingForResponse || (!messageText.trim() && !imageUri)}
-                        >
-                            {isLoading || isUploading ? (
-                                <ActivityIndicator size="small" color="#000" />
-                            ) : (
-                                <ArrowRightIcon />
-                            )}
-                        </TouchableOpacity>
                     </View>
+
+                    <AttachmentSheet
+                        visible={attachmentVisible}
+                        onClose={closeAttachmentSheet}
+                        onCamera={pickImageFromCamera}
+                        onLibrary={pickImageFromLibrary}
+                        onFile={pickDocument}
+                    />
+
+                    {!hideBottomNav && <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />}
                 </View>
-
-                <BottomTabNav activeTab="Chat" onTabPress={onTabChange} />
-
             </LinearGradient>
         </View>
     );

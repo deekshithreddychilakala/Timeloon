@@ -45,20 +45,34 @@ export const ChatStyles = StyleSheet.create({
         color: colors.black,
         textAlign: 'left',
     },
+    inputShadowContainer: {
+        borderRadius: 14,
+        backgroundColor: colors.white,
+        // Purple shadow from design
+        shadowColor: '#8C43FF',
+        shadowOffset: { width: 0, height: -5 },
+        shadowOpacity: 0.24,
+        shadowRadius: 11,
+        elevation: 8,
+    },
     inputContainer: {
-        paddingHorizontal: 27.3,
-        paddingVertical: 12,
-        backgroundColor: 'transparent',
-        // borderTopWidth: 1,
-        borderTopColor: colors.tertiary,
-        marginBottom: 80, // space for bottom tab
+        minHeight: 118,
+        alignContent: 'space-between',
+        padding: 15,
+        gap: 30,
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: 'rgba(110, 110, 110, 0.10)',
+        backgroundColor: colors.white,
+        overflow: 'hidden',
     },
     input: {
-        flex: 1,
+        // flex: 1,
         minHeight: 40,
-        maxHeight: 100,
-        paddingHorizontal: 8,
-        paddingVertical: 8,
+        maxHeight: 40,
+        paddingTop: 0,
+        // maxHeight: 100,
+        paddingHorizontal: 0,
         backgroundColor: 'transparent',
         fontFamily: Fonts.book,
         fontSize: 14,
@@ -66,13 +80,19 @@ export const ChatStyles = StyleSheet.create({
         color: colors.black,
     },
     sendButton: {
-        width: 48,
-        height: 48,
-        backgroundColor: colors.primary,
-        borderRadius: 24,
+        width: 39,
+        height: 39,
+        borderRadius: 40,
+        overflow: 'hidden',
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 8,
+    },
+    sendButtonGradient: {
+        width: 39,
+        height: 39,
+        borderRadius: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     sendButtonDisabled: {
         opacity: 0.5,
@@ -92,23 +112,70 @@ export const ChatStyles = StyleSheet.create({
     messagesContainer: {
         padding: 27.3,
         paddingTop: 20,
+        gap: 28,
     },
     messageBubble: {
-        maxWidth: '80%',
-        marginBottom: 12,
-        paddingVertical: 10,
-        paddingHorizontal: 14,
-        borderRadius: 16,
+        maxWidth: '86%', // keep responsive, slightly wider
+        // marginBottom: 28,
+    },
+    messageBubbleInner: {
+        paddingVertical: 17,
+        paddingHorizontal: 19,
+        borderRadius: 22,
+        gap: 8,
+    },
+    messageBubbleInnerUser: {
+        borderWidth: 1,
+        borderColor: 'rgba(140, 67, 255, 0.15)',
+    },
+    messageBubbleInnerAssistant: {
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.06)',
+    },
+
+    messageTimestamp: {
+        alignSelf: 'flex-end',
+        marginTop: 6,
+        fontSize: 11,
+        lineHeight: 14,
+        color: colors.timestampColor,
+    },
+
+    messageBubbleShadowWrapper: {
+        backgroundColor: colors.white,
+        borderRadius: 22,
+        overflow: 'visible',
+    },
+    userMessageShadow: {
+        // iOS shadow - purple tint
+        shadowColor: 'rgba(140, 67, 255, 0.25)',
+        shadowOpacity: 1,
+        shadowRadius: 16,
+        shadowOffset: { width: 0, height: 4 },
+        // Android elevation
+        elevation: 8,
+    },
+    assistantMessageShadow: {
+        // iOS shadow - neutral
+        shadowColor: colors.black,
+        shadowOpacity: 0.06,
+        shadowRadius: 24,
+        shadowOffset: { width: 0, height: 8 },
+        // Android elevation
+        elevation: 8,
+    },
+    messageBubbleClip: {
+        borderRadius: 22,
+        overflow: 'hidden',
+    },
+    messageBubbleGradient: {
+        borderRadius: 22,
     },
     userMessage: {
         alignSelf: 'flex-end',
-        backgroundColor: colors.primary,
-        borderBottomRightRadius: 4,
     },
     assistantMessage: {
         alignSelf: 'flex-start',
-        backgroundColor: colors.surface,
-        borderBottomLeftRadius: 4,
     },
     messageText: {
         fontFamily: Fonts.book,
@@ -126,10 +193,6 @@ export const ChatStyles = StyleSheet.create({
         width: 200,
         height: 200,
         borderRadius: 12,
-        marginBottom: 8,
-    },
-    messageTextWithImage: {
-        marginTop: 4,
     },
     imagePreviewContainer: {
         position: 'relative',
@@ -140,6 +203,13 @@ export const ChatStyles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 8,
+    },
+    uploadProgressContainer: {
+        marginBottom: 8,
+        alignSelf: 'flex-start',
+    },
+    uploadProgressWrapper: {
+        backgroundColor: 'transparent',
     },
     removeImageButton: {
         position: 'absolute',
@@ -158,21 +228,47 @@ export const ChatStyles = StyleSheet.create({
         fontFamily: Fonts.heavy,
     },
     inputRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: colors.white,
-        borderWidth: 1.5,
-        borderColor: '#E5AB47',
-        borderRadius: 28,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        gap: 10,
+        backgroundColor: 'transparent',
     },
-    imageButton: {
-        width: 40,
-        height: 40,
+    actionButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    actionButton: {
+        width: 39,
+        height: 39,
+        borderRadius: 40,
+        borderWidth: 1.2,
+        borderColor: 'rgba(140, 67, 255, 0.30)',
+        backgroundColor: 'transparent',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 4,
+    },
+
+    dateSeparatorContainer: {
+        alignSelf: 'center',
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 12,
+        backgroundColor: colors.white,
+        borderWidth: 1,
+        borderColor: colors.black12,
+        marginBottom: 12,
+    },
+    dateSeparatorText: {
+        fontFamily: Fonts.medium,
+        fontSize: 12,
+        letterSpacing: -0.1,
+        color: colors.black03,
+    },
+    imageButton: {
+        width: 32,
+        height: 32,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     imageButtonText: {
         fontSize: 24,

@@ -18,18 +18,22 @@ export const SignInStyles = StyleSheet.create({
         fontWeight: '800'
     },
     input: {
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.white,
         minHeight: 48,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: colors.yellow01,
+        borderColor: 'rgba(164, 117, 239, 0.5)',
         paddingVertical: 14.75,
-        paddingHorizontal: 21.5,
-        color: colors.black06,
-        fontFamily: Fonts.medium,
+        paddingHorizontal: 12,
+        color: colors.black,
+        fontFamily: Fonts.book,
         fontSize: 16,
         letterSpacing: -.16,
-        marginBottom: 20
+        marginBottom: 20,
+        shadowColor: '#FFDFA6',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
     },
     passwordInput: {
         marginBottom: 30
@@ -62,7 +66,7 @@ export const SignInStyles = StyleSheet.create({
     },
     createAccLinkContainer: {
         borderBottomWidth: 1,
-        borderBottomColor: colors.yellow01,
+        borderBottomColor: 'rgba(164, 117, 239, 0.6)',
         paddingBottom: 3,
     },
     link: {

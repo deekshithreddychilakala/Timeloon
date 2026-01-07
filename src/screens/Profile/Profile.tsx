@@ -1,17 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { ProfileStyles as styles } from './Profile.styles';
 import BottomTabNav from '@/components/BottomTabNav';
+import DangerButton from '@/components/DangerButton';
 import { supabase } from '@/services/supabase/client';
 import Toast from 'react-native-toast-message';
+import colors from '@/styles/colors';
+import { GlobalStyles } from '@/styles/Global.styles';
+import ProfileActive from '../../../assets/icons/profile_active.svg';
+import LoginAccountIcon from '../../../assets/icons/login_account.svg';
+import MemoryTreeIcon from '../../../assets/icons/memory_tree_active.svg';
+import ChevronRightIcon from '../../../assets/icons/chevron_right.svg';
 
 interface ProfileScreenProps {
     onTabChange: (tab: 'MemoryTree' | 'Chat' | 'Profile') => void;
+    onEditProfile: () => void;
+    onAccountPassword: () => void;
+    onManageMemories: () => void;
+    hideBottomNav?: boolean;
 }
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange, onEditProfile, onAccountPassword, onManageMemories, hideBottomNav }) => {
     const [userEmail, setUserEmail] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
+    const [userDob, setUserDob] = useState<string>('');
+    const [avatarUrl, setAvatarUrl] = useState<string>('');
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -19,6 +32,20 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
             if (user) {
                 setUserEmail(user.email || '');
                 setUserName(user.user_metadata?.full_name || '');
+                setAvatarUrl(user.user_metadata?.avatar_url || '');
+                const dobIso = user.user_metadata?.dob;
+                if (dobIso) {
+                    const d = new Date(dobIso);
+                    if (!isNaN(d.getTime())) {
+                        setUserDob(
+                            d.toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric',
+                            })
+                        );
+                    }
+                }
             }
         };
 
@@ -33,7 +60,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
             Toast.show({
                 type: 'success',
                 text1: 'Signed out successfully',
-                position: 'bottom',
+                position: 'top',
                 visibilityTime: 2000,
             });
         } catch (error: any) {
@@ -41,55 +68,88 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onTabChange }) => {
                 type: 'error',
                 text1: 'Error signing out',
                 text2: error.message,
-                position: 'bottom',
+                position: 'top',
                 visibilityTime: 3000,
             });
         }
     };
 
+    const avatarNode = useMemo(() => {
+        if (avatarUrl) {
+            return (
+                <Image
+                    source={{ uri: avatarUrl }}
+                    style={styles.avatarImage}
+                    resizeMode="cover"
+                />
+            );
+        }
+        return <ProfileActive width={96} height={96} />;
+    }, [avatarUrl]);
+
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Profile</Text>
-                <Text style={styles.subtitle}>Manage your account</Text>
-            </View>
+            <View style={[colors.mainScreensBGElement, styles.background]}>
+                <View style={GlobalStyles.mainScreenTitleDescContainer}>
+                    <Text style={GlobalStyles.mainScreenTitle}>Profile</Text>
+                    <Text style={GlobalStyles.mainScreenDescription}>View your profile, personal info, and settings</Text>
+                </View>
 
-            <ScrollView
-                style={{ flex: 1 }}
-                contentContainerStyle={styles.scrollContent}
-            >
-                <View style={styles.content}>
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Account Information</Text>
-
-                        {userName ? (
-                            <View style={styles.infoRow}>
-                                <Text style={styles.infoLabel}>Name</Text>
-                                <Text style={styles.infoValue}>{userName}</Text>
-                            </View>
-                        ) : null}
-
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoLabel}>Email</Text>
-                            <Text style={styles.infoValue}>{userEmail || 'Not available'}</Text>
+                <View style={styles.contentWrapper}>
+                    {/* User Card */}
+                    <View style={styles.card}>
+                        <View style={styles.avatarWrapper}>{avatarNode}</View>
+                        <View style={styles.userInfo}>
+                            <Text style={styles.userName}>{userName || 'Your name'}</Text>
+                            <Text style={styles.userEmail}>{userEmail || 'Email not available'}</Text>
+                            <Text style={styles.userDob}>{userDob || 'Add your birthday'}</Text>
                         </View>
                     </View>
 
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Actions</Text>
+                    {/* Settings Section */}
+                    <View style={styles.settingsSection}>
+                        <Text style={styles.settingsTitle}>Settings</Text>
 
-                        <TouchableOpacity
-                            style={styles.signOutButton}
-                            onPress={handleSignOut}
-                            activeOpacity={0.7}
-                        >
-                            <Text style={styles.signOutButtonText}>Sign Out</Text>
-                        </TouchableOpacity>
+                        <View style={styles.settingsList}>
+                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8} onPress={onEditProfile}>
+                                <View style={styles.settingIconBg}>
+                                    <ProfileActive width={24} height={24} />
+                                </View>
+                                <Text style={styles.settingLabel}>Edit Profile</Text>
+                                <ChevronRightIcon width={20} height={20} style={styles.chevron} />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8} onPress={onAccountPassword}>
+                                <View style={styles.settingIconBg}>
+                                    <LoginAccountIcon width={24} height={24} />
+                                </View>
+                                <Text style={styles.settingLabel}>Account & Password</Text>
+                                <ChevronRightIcon width={20} height={20} style={styles.chevron} />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.settingItem} activeOpacity={0.8} onPress={onManageMemories}>
+                                <View style={styles.settingIconBg}>
+                                    <MemoryTreeIcon width={24} height={24} />
+                                </View>
+                                <Text style={styles.settingLabel}>Manage Memories</Text>
+                                <ChevronRightIcon width={20} height={20} style={styles.chevron} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            </ScrollView>
 
-            <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />
+                    {/* Sign Out Button */}
+                    <DangerButton
+                        title="Sign out"
+                        onPress={handleSignOut}
+                        style={styles.signOutButton}
+                    />
+                </View>
+
+                <View style={GlobalStyles.BottomNavContainer}>
+                    {!hideBottomNav && <BottomTabNav activeTab="Profile" onTabPress={onTabChange} />}
+                </View>
+            </View>
+
         </View>
     );
 };

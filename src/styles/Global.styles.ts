@@ -14,9 +14,9 @@ export const GlobalStyles = StyleSheet.create({
         paddingHorizontal: 27,
         gap: 4,
         flexDirection: 'column',
-        backgroundColor: colors.black09,
+        backgroundColor: 'transparent',
         borderBottomWidth: 1,
-        borderBottomColor: colors.yellow01,
+        borderBottomColor: colors.purple01,
     },
     mainScreenTitle: {
         fontFamily: Fonts.heavy,
@@ -29,5 +29,10 @@ export const GlobalStyles = StyleSheet.create({
         fontSize: 13,
         letterSpacing: -0.13,
         color: colors.black10,
+    },
+    BottomNavContainer: {
+        paddingHorizontal: 27,
+        gap: 24,
+        marginBottom: 23,
     }
 });
